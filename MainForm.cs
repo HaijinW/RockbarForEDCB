@@ -1104,6 +1104,7 @@ namespace RockbarForEDCB
             if (e.KeyCode == Keys.Enter)
             {
                 Filter();
+                e.SuppressKeyPress = true;
             }
         }
 
