@@ -72,6 +72,10 @@ namespace RockbarForEDCB
             TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
             this.Font = fontConverter.ConvertToString(SystemFonts.DefaultFont);
             this.MenuFont = fontConverter.ConvertToString(SystemFonts.DefaultFont);
+            this.TabFont = fontConverter.ConvertToString(SystemFonts.DefaultFont);
+            this.ButtonFont = fontConverter.ConvertToString(SystemFonts.DefaultFont);
+            this.LabelFont = fontConverter.ConvertToString(SystemFonts.DefaultFont);
+            this.TextBoxFont = fontConverter.ConvertToString(SystemFonts.DefaultFont);
 
             TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
             this.ForeColor = colorConverter.ConvertToString(Color.FromArgb(25, 250, 140));
@@ -162,6 +166,14 @@ namespace RockbarForEDCB
         public string PartialReserveMenuBackColor { get; set; }
         // 予約不可メニュー背景色(シリアライズしたもの)
         public string NgReserveMenuBackColor { get; set; }
+        // タブのフォント(シリアライズしたもの)
+        public string TabFont { get; set; }
+        // ボタンのフォント(シリアライズしたもの)
+        public string ButtonFont { get; set; }
+        // ラベルのフォント(シリアライズしたもの)
+        public string LabelFont { get; set; }
+        // テキストボックスのフォント(シリアライズしたもの)
+        public string TextBoxFont { get; set; }
         // BonDriver名→チューナー名マッピング
         public Dictionary<string, string> BonDriverNameToTunerName { get; set; }
     }

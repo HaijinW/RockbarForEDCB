@@ -220,10 +220,21 @@ namespace RockbarForEDCB
             TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
             Font font = (Font) fontConverter.ConvertFromString(rockbarSetting.Font);
             Font menuFont = (Font)fontConverter.ConvertFromString(rockbarSetting.MenuFont);
+            Font tabFont = (Font)fontConverter.ConvertFromString(rockbarSetting.TabFont);
+            Font buttonFont = (Font)fontConverter.ConvertFromString(rockbarSetting.ButtonFont);
+            Font labelFont = (Font)fontConverter.ConvertFromString(rockbarSetting.LabelFont);
+            Font textBoxFont = (Font)fontConverter.ConvertFromString(rockbarSetting.TextBoxFont);
 
             serviceListView.Font = font;
             tunerListView.Font = font;
             listContextMenuStrip.Font = menuFont;
+            serviceTabControl.Font = tabFont;
+            resetButton.Font = buttonFont;
+            closeButton.Font = buttonFont;
+            filteringLabel.Font = labelFont;
+            filterTextBox.Font = textBoxFont;
+            filterButton.Font = buttonFont;
+            settingButton.Font = buttonFont;
 
             // フォント設定時にチャンネル一覧の2, 3列目の幅を設定(以降固定)
             // applySetting後に必ずServiceListはクリアされるため、1回2, 3列目だけのダミーデータを追加して列幅調整する
