@@ -244,7 +244,7 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(530, 6);
+            this.resetButton.Location = new System.Drawing.Point(530, 7);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(47, 23);
             this.resetButton.TabIndex = 5;
@@ -275,7 +275,7 @@
             // 
             // filterButton
             // 
-            this.filterButton.Location = new System.Drawing.Point(482, 6);
+            this.filterButton.Location = new System.Drawing.Point(482, 7);
             this.filterButton.Name = "filterButton";
             this.filterButton.Size = new System.Drawing.Size(47, 23);
             this.filterButton.TabIndex = 8;
