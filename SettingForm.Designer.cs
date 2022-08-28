@@ -38,6 +38,8 @@ namespace RockbarForEDCB
             System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("チャンネル　00:00-00:00　◎　正常予約番組");
             System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("チャンネル　00:00-00:00　欠　部分予約番組");
             System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("チャンネル　00:00-00:00　×　予約不可番組");
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("チャンネル　00:00-00:00　無　無効予約番組");
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("チャンネル　00:00-00:00　　　予約一覧ヘッダ");
             System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
             "01/01 00:00～00:00  　  通常番組",
             "test",
@@ -46,6 +48,7 @@ namespace RockbarForEDCB
             System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("01/01 00:00～00:00  ◎  正常予約番組");
             System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("01/01 00:00～00:00  欠  部分予約番組");
             System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("01/01 00:00～00:00  ×  予約不可番組");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("01/01 00:00～00:00  無  無効予約番組");
             this.cancelButton = new System.Windows.Forms.Button();
             this.applyButton = new System.Windows.Forms.Button();
             this.allServiceListView = new System.Windows.Forms.ListView();
@@ -165,6 +168,15 @@ namespace RockbarForEDCB
             this.selectNgReserveListBackColorButton = new System.Windows.Forms.Button();
             this.ngReserveListBackColorTextBox = new System.Windows.Forms.TextBox();
             this.ngReserveListBackColorLabel = new System.Windows.Forms.Label();
+            this.selectDisabledReserveListBackColorButton = new System.Windows.Forms.Button();
+            this.disabledReserveListBackColorTextBox = new System.Windows.Forms.TextBox();
+            this.disabledReserveListBackColorLabel = new System.Windows.Forms.Label();
+            this.selectReserveListHeaderForeColorButton = new System.Windows.Forms.Button();
+            this.reserveListHeaderForeColorTextBox = new System.Windows.Forms.TextBox();
+            this.reserveListHeaderForeColorLabel = new System.Windows.Forms.Label();
+            this.selectReserveListHeaderBackColorButton = new System.Windows.Forms.Button();
+            this.reserveListHeaderBackColorTextBox = new System.Windows.Forms.TextBox();
+            this.reserveListHeaderBackColorLabel = new System.Windows.Forms.Label();
             this.contextMenuFontColorTabPage = new System.Windows.Forms.TabPage();
             this.ngReserveMenuBackColorTextBox = new System.Windows.Forms.TextBox();
             this.selectNgReserveMenuBackColorButton = new System.Windows.Forms.Button();
@@ -174,6 +186,9 @@ namespace RockbarForEDCB
             this.okReserveMenuBackColorLabel = new System.Windows.Forms.Label();
             this.okReserveMenuBackColorTextBox = new System.Windows.Forms.TextBox();
             this.selectOkReserveMenuBackColorButton = new System.Windows.Forms.Button();
+            this.disabledReserveMenuBackColorLabel = new System.Windows.Forms.Label();
+            this.disabledReserveMenuBackColorTextBox = new System.Windows.Forms.TextBox();
+            this.selectDisabledReserveMenuBackColorButton = new System.Windows.Forms.Button();
             this.previewMenuListView = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label5 = new System.Windows.Forms.Label();
@@ -1023,6 +1038,15 @@ namespace RockbarForEDCB
             this.listViewContColorTabPage.Controls.Add(this.okReserveListBackColorLabel);
             this.listViewContColorTabPage.Controls.Add(this.okReserveListBackColorTextBox);
             this.listViewContColorTabPage.Controls.Add(this.selectOkReserveListBackColorButton);
+            this.listViewContColorTabPage.Controls.Add(this.disabledReserveListBackColorLabel);
+            this.listViewContColorTabPage.Controls.Add(this.disabledReserveListBackColorTextBox);
+            this.listViewContColorTabPage.Controls.Add(this.selectDisabledReserveListBackColorButton);
+            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderForeColorLabel);
+            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderForeColorTextBox);
+            this.listViewContColorTabPage.Controls.Add(this.selectReserveListHeaderForeColorButton);
+            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderBackColorLabel);
+            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderBackColorTextBox);
+            this.listViewContColorTabPage.Controls.Add(this.selectReserveListHeaderBackColorButton);
             this.listViewContColorTabPage.Controls.Add(this.previewListView);
             this.listViewContColorTabPage.Controls.Add(this.previewLabel);
             this.listViewContColorTabPage.Controls.Add(this.foreColorLabel);
@@ -1196,7 +1220,9 @@ namespace RockbarForEDCB
             listViewItem9,
             listViewItem10,
             listViewItem11,
-            listViewItem12});
+            listViewItem12,
+            listViewItem17,
+            listViewItem18});
             this.previewListView.Location = new System.Drawing.Point(423, 90);
             this.previewListView.MultiSelect = false;
             this.previewListView.Name = "previewListView";
@@ -1345,6 +1371,87 @@ namespace RockbarForEDCB
             this.ngReserveListBackColorLabel.TabIndex = 61;
             this.ngReserveListBackColorLabel.Text = "リスト背景色(予約不可)";
             // 
+            // selectDisabledReserveListBackColorButton
+            // 
+            this.selectDisabledReserveListBackColorButton.Location = new System.Drawing.Point(290, 276);
+            this.selectDisabledReserveListBackColorButton.Name = "selectDisabledReserveListBackColorButton";
+            this.selectDisabledReserveListBackColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectDisabledReserveListBackColorButton.TabIndex = 59;
+            this.selectDisabledReserveListBackColorButton.Text = "選択";
+            this.selectDisabledReserveListBackColorButton.UseVisualStyleBackColor = true;
+            this.selectDisabledReserveListBackColorButton.Click += new System.EventHandler(this.selectDisabledReserveListBackColorButton_Click);
+            // 
+            // disabledReserveListBackColorTextBox
+            // 
+            this.disabledReserveListBackColorTextBox.Location = new System.Drawing.Point(148, 278);
+            this.disabledReserveListBackColorTextBox.Name = "disabledReserveListBackColorTextBox";
+            this.disabledReserveListBackColorTextBox.ReadOnly = true;
+            this.disabledReserveListBackColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.disabledReserveListBackColorTextBox.TabIndex = 60;
+            // 
+            // disabledReserveListBackColorLabel
+            // 
+            this.disabledReserveListBackColorLabel.AutoSize = true;
+            this.disabledReserveListBackColorLabel.Location = new System.Drawing.Point(19, 281);
+            this.disabledReserveListBackColorLabel.Name = "disabledReserveListBackColorLabel";
+            this.disabledReserveListBackColorLabel.Size = new System.Drawing.Size(121, 12);
+            this.disabledReserveListBackColorLabel.TabIndex = 61;
+            this.disabledReserveListBackColorLabel.Text = "リスト背景色(無効予約)";
+            // 
+            // selectReserveListHeaderForeColorButton
+            // 
+            this.selectReserveListHeaderForeColorButton.Location = new System.Drawing.Point(290, 314);
+            this.selectReserveListHeaderForeColorButton.Name = "selectReserveListHeaderForeColorButton";
+            this.selectReserveListHeaderForeColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectReserveListHeaderForeColorButton.TabIndex = 59;
+            this.selectReserveListHeaderForeColorButton.Text = "選択";
+            this.selectReserveListHeaderForeColorButton.UseVisualStyleBackColor = true;
+            this.selectReserveListHeaderForeColorButton.Click += new System.EventHandler(this.selectReserveListHeaderForeColorButton_Click);
+            // 
+            // reserveListHeaderForeColorTextBox
+            // 
+            this.reserveListHeaderForeColorTextBox.Location = new System.Drawing.Point(148, 316);
+            this.reserveListHeaderForeColorTextBox.Name = "reserveListHeaderForeColorTextBox";
+            this.reserveListHeaderForeColorTextBox.ReadOnly = true;
+            this.reserveListHeaderForeColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.reserveListHeaderForeColorTextBox.TabIndex = 60;
+            // 
+            // reserveListHeaderForeColorLabel
+            // 
+            this.reserveListHeaderForeColorLabel.AutoSize = true;
+            this.reserveListHeaderForeColorLabel.Location = new System.Drawing.Point(24, 319);
+            this.reserveListHeaderForeColorLabel.Name = "reserveListHeaderForeColorLabel";
+            this.reserveListHeaderForeColorLabel.Size = new System.Drawing.Size(121, 12);
+            this.reserveListHeaderForeColorLabel.TabIndex = 61;
+            this.reserveListHeaderForeColorLabel.Text = "予約一覧ヘッダ文字色";
+            // 
+            // selectReserveListHeaderBackColorButton
+            // 
+            this.selectReserveListHeaderBackColorButton.Location = new System.Drawing.Point(290, 352);
+            this.selectReserveListHeaderBackColorButton.Name = "selectReserveListHeaderBackColorButton";
+            this.selectReserveListHeaderBackColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectReserveListHeaderBackColorButton.TabIndex = 59;
+            this.selectReserveListHeaderBackColorButton.Text = "選択";
+            this.selectReserveListHeaderBackColorButton.UseVisualStyleBackColor = true;
+            this.selectReserveListHeaderBackColorButton.Click += new System.EventHandler(this.selectReserveListHeaderBackColorButton_Click);
+            // 
+            // reserveListHeaderBackColorTextBox
+            // 
+            this.reserveListHeaderBackColorTextBox.Location = new System.Drawing.Point(148, 354);
+            this.reserveListHeaderBackColorTextBox.Name = "reserveListHeaderBackColorTextBox";
+            this.reserveListHeaderBackColorTextBox.ReadOnly = true;
+            this.reserveListHeaderBackColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.reserveListHeaderBackColorTextBox.TabIndex = 60;
+            // 
+            // reserveListHeaderBackColorLabel
+            // 
+            this.reserveListHeaderBackColorLabel.AutoSize = true;
+            this.reserveListHeaderBackColorLabel.Location = new System.Drawing.Point(24, 357);
+            this.reserveListHeaderBackColorLabel.Name = "reserveListHeaderBackColorLabel";
+            this.reserveListHeaderBackColorLabel.Size = new System.Drawing.Size(121, 12);
+            this.reserveListHeaderBackColorLabel.TabIndex = 61;
+            this.reserveListHeaderBackColorLabel.Text = "予約一覧ヘッダ背景色";
+            // 
             // contextMenuFontColorTabPage
             // 
             this.contextMenuFontColorTabPage.Controls.Add(this.ngReserveMenuBackColorLabel);
@@ -1356,6 +1463,9 @@ namespace RockbarForEDCB
             this.contextMenuFontColorTabPage.Controls.Add(this.okReserveMenuBackColorLabel);
             this.contextMenuFontColorTabPage.Controls.Add(this.okReserveMenuBackColorTextBox);
             this.contextMenuFontColorTabPage.Controls.Add(this.selectOkReserveMenuBackColorButton);
+            this.contextMenuFontColorTabPage.Controls.Add(this.disabledReserveMenuBackColorLabel);
+            this.contextMenuFontColorTabPage.Controls.Add(this.disabledReserveMenuBackColorTextBox);
+            this.contextMenuFontColorTabPage.Controls.Add(this.selectDisabledReserveMenuBackColorButton);
             this.contextMenuFontColorTabPage.Controls.Add(this.previewMenuListView);
             this.contextMenuFontColorTabPage.Controls.Add(this.label5);
             this.contextMenuFontColorTabPage.Controls.Add(this.menuBackColorLabel);
@@ -1444,6 +1554,33 @@ namespace RockbarForEDCB
             this.selectOkReserveMenuBackColorButton.UseVisualStyleBackColor = true;
             this.selectOkReserveMenuBackColorButton.Click += new System.EventHandler(this.selectOkReserveMenuBackColorButton_Click);
             // 
+            // disabledReserveMenuBackColorLabel
+            // 
+            this.disabledReserveMenuBackColorLabel.AutoSize = true;
+            this.disabledReserveMenuBackColorLabel.Location = new System.Drawing.Point(7, 205);
+            this.disabledReserveMenuBackColorLabel.Name = "disabledReserveMenuBackColorLabel";
+            this.disabledReserveMenuBackColorLabel.Size = new System.Drawing.Size(132, 12);
+            this.disabledReserveMenuBackColorLabel.TabIndex = 79;
+            this.disabledReserveMenuBackColorLabel.Text = "メニュー背景色(無効予約)";
+            // 
+            // disabledReserveMenuBackColorTextBox
+            // 
+            this.disabledReserveMenuBackColorTextBox.Location = new System.Drawing.Point(148, 202);
+            this.disabledReserveMenuBackColorTextBox.Name = "disabledReserveMenuBackColorTextBox";
+            this.disabledReserveMenuBackColorTextBox.ReadOnly = true;
+            this.disabledReserveMenuBackColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.disabledReserveMenuBackColorTextBox.TabIndex = 78;
+            // 
+            // selectDisabledReserveMenuBackColorButton
+            // 
+            this.selectDisabledReserveMenuBackColorButton.Location = new System.Drawing.Point(290, 200);
+            this.selectDisabledReserveMenuBackColorButton.Name = "selectDisabledReserveMenuBackColorButton";
+            this.selectDisabledReserveMenuBackColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectDisabledReserveMenuBackColorButton.TabIndex = 77;
+            this.selectDisabledReserveMenuBackColorButton.Text = "選択";
+            this.selectDisabledReserveMenuBackColorButton.UseVisualStyleBackColor = true;
+            this.selectDisabledReserveMenuBackColorButton.Click += new System.EventHandler(this.selectDisabledReserveMenuBackColorButton_Click);
+            // 
             // previewMenuListView
             // 
             this.previewMenuListView.BackColor = System.Drawing.SystemColors.ControlLight;
@@ -1456,7 +1593,8 @@ namespace RockbarForEDCB
             listViewItem13,
             listViewItem14,
             listViewItem15,
-            listViewItem16});
+            listViewItem16,
+            listViewItem19});
             this.previewMenuListView.Location = new System.Drawing.Point(409, 75);
             this.previewMenuListView.MultiSelect = false;
             this.previewMenuListView.Name = "previewMenuListView";
@@ -1687,6 +1825,15 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label okReserveListBackColorLabel;
         private System.Windows.Forms.TextBox okReserveListBackColorTextBox;
         private System.Windows.Forms.Button selectOkReserveListBackColorButton;
+        private System.Windows.Forms.Label disabledReserveListBackColorLabel;
+        private System.Windows.Forms.TextBox disabledReserveListBackColorTextBox;
+        private System.Windows.Forms.Button selectDisabledReserveListBackColorButton;
+        private System.Windows.Forms.Label reserveListHeaderForeColorLabel;
+        private System.Windows.Forms.TextBox reserveListHeaderForeColorTextBox;
+        private System.Windows.Forms.Button selectReserveListHeaderForeColorButton;
+        private System.Windows.Forms.Label reserveListHeaderBackColorLabel;
+        private System.Windows.Forms.TextBox reserveListHeaderBackColorTextBox;
+        private System.Windows.Forms.Button selectReserveListHeaderBackColorButton;
         private System.Windows.Forms.ListView previewListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Label foreColorLabel;
@@ -1709,6 +1856,9 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label okReserveMenuBackColorLabel;
         private System.Windows.Forms.TextBox okReserveMenuBackColorTextBox;
         private System.Windows.Forms.Button selectOkReserveMenuBackColorButton;
+        private System.Windows.Forms.Label disabledReserveMenuBackColorLabel;
+        private System.Windows.Forms.TextBox disabledReserveMenuBackColorTextBox;
+        private System.Windows.Forms.Button selectDisabledReserveMenuBackColorButton;
         private System.Windows.Forms.ListView previewMenuListView;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label label5;

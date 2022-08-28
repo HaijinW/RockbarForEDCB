@@ -51,6 +51,7 @@
             this.bsTabPage = new System.Windows.Forms.TabPage();
             this.csTabPage = new System.Windows.Forms.TabPage();
             this.favoriteTabPage = new System.Windows.Forms.TabPage();
+            this.reserveTabPage = new System.Windows.Forms.TabPage();
             this.tunerListView = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -99,6 +100,7 @@
             this.serviceListView.View = System.Windows.Forms.View.Details;
             this.serviceListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.serviceListView_MouseClick);
             this.serviceListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.serviceListView_MouseDoubleClick);
+            this.serviceListView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.serviceListView_ItemSelectionChanged);
             // 
             // columnHeader1
             // 
@@ -142,10 +144,11 @@
             this.serviceTabControl.Controls.Add(this.bsTabPage);
             this.serviceTabControl.Controls.Add(this.csTabPage);
             this.serviceTabControl.Controls.Add(this.favoriteTabPage);
+            this.serviceTabControl.Controls.Add(this.reserveTabPage);
             this.serviceTabControl.Location = new System.Drawing.Point(8, 10);
             this.serviceTabControl.Name = "serviceTabControl";
             this.serviceTabControl.SelectedIndex = 0;
-            this.serviceTabControl.Size = new System.Drawing.Size(245, 20);
+            this.serviceTabControl.Size = new System.Drawing.Size(285, 20);
             this.serviceTabControl.TabIndex = 1;
             this.serviceTabControl.SelectedIndexChanged += new System.EventHandler(this.serviceTabControl_SelectedIndexChanged);
             // 
@@ -197,6 +200,16 @@
             this.favoriteTabPage.Text = "お気に入り";
             this.favoriteTabPage.UseVisualStyleBackColor = true;
             // 
+            // reserveTabPage
+            // 
+            this.reserveTabPage.Location = new System.Drawing.Point(4, 22);
+            this.reserveTabPage.Name = "reserveTabPage";
+            this.reserveTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.reserveTabPage.Size = new System.Drawing.Size(237, 0);
+            this.reserveTabPage.TabIndex = 1;
+            this.reserveTabPage.Text = "予約";
+            this.reserveTabPage.UseVisualStyleBackColor = true;
+            // 
             // tunerListView
             // 
             this.tunerListView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
@@ -223,7 +236,7 @@
             // 
             // filterTextBox
             // 
-            this.filterTextBox.Location = new System.Drawing.Point(298, 8);
+            this.filterTextBox.Location = new System.Drawing.Point(348, 8);
             this.filterTextBox.Name = "filterTextBox";
             this.filterTextBox.Size = new System.Drawing.Size(128, 19);
             this.filterTextBox.TabIndex = 4;
@@ -231,7 +244,7 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(480, 6);
+            this.resetButton.Location = new System.Drawing.Point(530, 6);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(47, 23);
             this.resetButton.TabIndex = 5;
@@ -254,7 +267,7 @@
             // 
             this.filteringLabel.AutoSize = true;
             this.filteringLabel.ForeColor = System.Drawing.Color.Red;
-            this.filteringLabel.Location = new System.Drawing.Point(247, 11);
+            this.filteringLabel.Location = new System.Drawing.Point(297, 11);
             this.filteringLabel.Name = "filteringLabel";
             this.filteringLabel.Size = new System.Drawing.Size(50, 12);
             this.filteringLabel.TabIndex = 7;
@@ -262,7 +275,7 @@
             // 
             // filterButton
             // 
-            this.filterButton.Location = new System.Drawing.Point(432, 6);
+            this.filterButton.Location = new System.Drawing.Point(482, 6);
             this.filterButton.Name = "filterButton";
             this.filterButton.Size = new System.Drawing.Size(47, 23);
             this.filterButton.TabIndex = 8;
@@ -339,7 +352,7 @@
             this.Controls.Add(this.serviceTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(600, 100);
+            this.MinimumSize = new System.Drawing.Size(640, 100);
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.Text = "RockbarForEDCB";
@@ -374,6 +387,7 @@
         private System.Windows.Forms.TabPage bsTabPage;
         private System.Windows.Forms.TabPage csTabPage;
         private System.Windows.Forms.TabPage favoriteTabPage;
+        private System.Windows.Forms.TabPage reserveTabPage;
         private System.Windows.Forms.ListView tunerListView;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
