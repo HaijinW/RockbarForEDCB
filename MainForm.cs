@@ -569,25 +569,38 @@ namespace RockbarForEDCB
         /// </summary>
         private void Filter()
         {
-            if (filterTextBox.Text != null)
+            if (string.IsNullOrEmpty(filterTextBox.Text))
             {
-                for (var i = serviceListView.Items.Count - 1; i >= 0; i--)
-                {
-                    var item = serviceListView.Items[i];
-
-                    if (
-                        item.SubItems[0].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0 &&
-                        item.SubItems[3].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0
-                    )
-                    {
-                        serviceListView.Items.RemoveAt(i);
-                    }
-                }
-
-                filteringLabel.Visible = true;
+                ResetFilter();
+                return;
             }
 
+            for (var i = serviceListView.Items.Count - 1; i >= 0; i--)
+            {
+                var item = serviceListView.Items[i];
+
+                if (
+                    item.SubItems[0].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0 &&
+                    item.SubItems[3].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0
+                )
+                {
+                    serviceListView.Items.RemoveAt(i);
+                }
+            }
+
+            filteringLabel.Visible = true;
+
             serviceListView.Refresh();
+        }
+
+        /// <summary>
+        /// フィルタのリセット処理
+        /// フィルタ文字列をクリアしフィルタ結果をリセットする。
+        /// </summary>
+        private void ResetFilter()
+        {
+            filterTextBox.Clear();
+            RefreshEvent(true, false);
         }
 
         /// <summary>
@@ -1115,6 +1128,7 @@ namespace RockbarForEDCB
             if (e.KeyCode == Keys.Enter)
             {
                 Filter();
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -1126,8 +1140,7 @@ namespace RockbarForEDCB
         /// <param name="e">イベントパラメータ</param>
         private void resetButton_Click(object sender, EventArgs e)
         {
-            filterTextBox.Clear();
-            RefreshEvent(true, false);
+            ResetFilter();
         }
 
         /// <summary>
