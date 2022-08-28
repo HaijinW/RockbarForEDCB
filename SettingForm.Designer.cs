@@ -184,6 +184,19 @@ namespace RockbarForEDCB
             this.menuFontTextBox = new System.Windows.Forms.TextBox();
             this.selectMenuFontButton = new System.Windows.Forms.Button();
             this.ngReserveMenuBackColorLabel = new System.Windows.Forms.Label();
+            this.controlUiFontColorTabPage = new System.Windows.Forms.TabPage();
+            this.tabFontLabel = new System.Windows.Forms.Label();
+            this.tabFontTextBox = new System.Windows.Forms.TextBox();
+            this.selectTabFontButton = new System.Windows.Forms.Button();
+            this.buttonFontLabel = new System.Windows.Forms.Label();
+            this.buttonFontTextBox = new System.Windows.Forms.TextBox();
+            this.selectButtonFontButton = new System.Windows.Forms.Button();
+            this.labelFontLabel = new System.Windows.Forms.Label();
+            this.labelFontTextBox = new System.Windows.Forms.TextBox();
+            this.selectLabelFontButton = new System.Windows.Forms.Button();
+            this.textBoxFontLabel = new System.Windows.Forms.Label();
+            this.textBoxFontTextBox = new System.Windows.Forms.TextBox();
+            this.selectTextBoxFontButton = new System.Windows.Forms.Button();
             this.settingTabControl.SuspendLayout();
             this.edcbLinkageTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portNumberNumericUpDown)).BeginInit();
@@ -197,6 +210,7 @@ namespace RockbarForEDCB
             this.listViewContColorTabPage.SuspendLayout();
             this.otherTabPage.SuspendLayout();
             this.contextMenuFontColorTabPage.SuspendLayout();
+            this.controlUiFontColorTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // cancelButton
@@ -350,6 +364,7 @@ namespace RockbarForEDCB
             this.settingTabControl.Controls.Add(this.tvtestLinkageTabPage);
             this.settingTabControl.Controls.Add(this.listViewContColorTabPage);
             this.settingTabControl.Controls.Add(this.contextMenuFontColorTabPage);
+            this.settingTabControl.Controls.Add(this.controlUiFontColorTabPage);
             this.settingTabControl.Controls.Add(this.otherTabPage);
             this.settingTabControl.Location = new System.Drawing.Point(1, 3);
             this.settingTabControl.Name = "settingTabControl";
@@ -1542,6 +1557,136 @@ namespace RockbarForEDCB
             this.ngReserveMenuBackColorLabel.TabIndex = 85;
             this.ngReserveMenuBackColorLabel.Text = "メニュー背景色(予約不可)";
             // 
+            // controlUiFontColorTabPage
+            // 
+            this.controlUiFontColorTabPage.Controls.Add(this.tabFontLabel);
+            this.controlUiFontColorTabPage.Controls.Add(this.tabFontTextBox);
+            this.controlUiFontColorTabPage.Controls.Add(this.selectTabFontButton);
+            this.controlUiFontColorTabPage.Controls.Add(this.buttonFontLabel);
+            this.controlUiFontColorTabPage.Controls.Add(this.buttonFontTextBox);
+            this.controlUiFontColorTabPage.Controls.Add(this.selectButtonFontButton);
+            this.controlUiFontColorTabPage.Controls.Add(this.labelFontLabel);
+            this.controlUiFontColorTabPage.Controls.Add(this.labelFontTextBox);
+            this.controlUiFontColorTabPage.Controls.Add(this.selectLabelFontButton);
+            this.controlUiFontColorTabPage.Controls.Add(this.textBoxFontLabel);
+            this.controlUiFontColorTabPage.Controls.Add(this.textBoxFontTextBox);
+            this.controlUiFontColorTabPage.Controls.Add(this.selectTextBoxFontButton);
+            this.controlUiFontColorTabPage.Location = new System.Drawing.Point(4, 22);
+            this.controlUiFontColorTabPage.Name = "controlUiFontColorTabPage";
+            this.controlUiFontColorTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.controlUiFontColorTabPage.Size = new System.Drawing.Size(791, 384);
+            this.controlUiFontColorTabPage.TabIndex = 8;
+            this.controlUiFontColorTabPage.Text = "フォント(コントロールUI)";
+            this.controlUiFontColorTabPage.UseVisualStyleBackColor = true;
+            // 
+            // tabFontLabel
+            // 
+            this.tabFontLabel.AutoSize = true;
+            this.tabFontLabel.Location = new System.Drawing.Point(78, 15);
+            this.tabFontLabel.Name = "tabFontLabel";
+            this.tabFontLabel.Size = new System.Drawing.Size(38, 12);
+            this.tabFontLabel.TabIndex = 64;
+            this.tabFontLabel.Text = "タブのフォント";
+            // 
+            // tabFontTextBox
+            // 
+            this.tabFontTextBox.Location = new System.Drawing.Point(148, 12);
+            this.tabFontTextBox.Name = "tabFontTextBox";
+            this.tabFontTextBox.ReadOnly = true;
+            this.tabFontTextBox.Size = new System.Drawing.Size(302, 19);
+            this.tabFontTextBox.TabIndex = 63;
+            // 
+            // selectTabFontButton
+            // 
+            this.selectTabFontButton.Location = new System.Drawing.Point(456, 10);
+            this.selectTabFontButton.Name = "selectTabFontButton";
+            this.selectTabFontButton.Size = new System.Drawing.Size(75, 23);
+            this.selectTabFontButton.TabIndex = 62;
+            this.selectTabFontButton.Text = "選択";
+            this.selectTabFontButton.UseVisualStyleBackColor = true;
+            this.selectTabFontButton.Click += new System.EventHandler(this.selectTabFontButton_Click);
+            // 
+            // buttonFontLabel
+            // 
+            this.buttonFontLabel.AutoSize = true;
+            this.buttonFontLabel.Location = new System.Drawing.Point(69, 53);
+            this.buttonFontLabel.Name = "buttonFontLabel";
+            this.buttonFontLabel.Size = new System.Drawing.Size(38, 12);
+            this.buttonFontLabel.TabIndex = 64;
+            this.buttonFontLabel.Text = "ボタンのフォント";
+            // 
+            // buttonFontTextBox
+            // 
+            this.buttonFontTextBox.Location = new System.Drawing.Point(148, 50);
+            this.buttonFontTextBox.Name = "buttonFontTextBox";
+            this.buttonFontTextBox.ReadOnly = true;
+            this.buttonFontTextBox.Size = new System.Drawing.Size(302, 19);
+            this.buttonFontTextBox.TabIndex = 63;
+            // 
+            // selectButtonFontButton
+            // 
+            this.selectButtonFontButton.Location = new System.Drawing.Point(456, 48);
+            this.selectButtonFontButton.Name = "selectButtonFontButton";
+            this.selectButtonFontButton.Size = new System.Drawing.Size(75, 23);
+            this.selectButtonFontButton.TabIndex = 62;
+            this.selectButtonFontButton.Text = "選択";
+            this.selectButtonFontButton.UseVisualStyleBackColor = true;
+            this.selectButtonFontButton.Click += new System.EventHandler(this.selectButtonFontButton_Click);
+            // 
+            // labelFontLabel
+            // 
+            this.labelFontLabel.AutoSize = true;
+            this.labelFontLabel.Location = new System.Drawing.Point(68, 91);
+            this.labelFontLabel.Name = "labelFontLabel";
+            this.labelFontLabel.Size = new System.Drawing.Size(38, 12);
+            this.labelFontLabel.TabIndex = 64;
+            this.labelFontLabel.Text = "ラベルのフォント";
+            // 
+            // labelFontTextBox
+            // 
+            this.labelFontTextBox.Location = new System.Drawing.Point(148, 88);
+            this.labelFontTextBox.Name = "labelFontTextBox";
+            this.labelFontTextBox.ReadOnly = true;
+            this.labelFontTextBox.Size = new System.Drawing.Size(302, 19);
+            this.labelFontTextBox.TabIndex = 63;
+            // 
+            // selectLabelFontButton
+            // 
+            this.selectLabelFontButton.Location = new System.Drawing.Point(456, 86);
+            this.selectLabelFontButton.Name = "selectLabelFontButton";
+            this.selectLabelFontButton.Size = new System.Drawing.Size(75, 23);
+            this.selectLabelFontButton.TabIndex = 62;
+            this.selectLabelFontButton.Text = "選択";
+            this.selectLabelFontButton.UseVisualStyleBackColor = true;
+            this.selectLabelFontButton.Click += new System.EventHandler(this.selectLabelFontButton_Click);
+            // 
+            // textBoxFontLabel
+            // 
+            this.textBoxFontLabel.AutoSize = true;
+            this.textBoxFontLabel.Location = new System.Drawing.Point(29, 129);
+            this.textBoxFontLabel.Name = "textBoxFontLabel";
+            this.textBoxFontLabel.Size = new System.Drawing.Size(38, 12);
+            this.textBoxFontLabel.TabIndex = 64;
+            this.textBoxFontLabel.Text = "テキストボックスのフォント";
+            // 
+            // textBoxFontTextBox
+            // 
+            this.textBoxFontTextBox.Location = new System.Drawing.Point(148, 126);
+            this.textBoxFontTextBox.Name = "textBoxFontTextBox";
+            this.textBoxFontTextBox.ReadOnly = true;
+            this.textBoxFontTextBox.Size = new System.Drawing.Size(302, 19);
+            this.textBoxFontTextBox.TabIndex = 63;
+            // 
+            // selectTextBoxFontButton
+            // 
+            this.selectTextBoxFontButton.Location = new System.Drawing.Point(456, 124);
+            this.selectTextBoxFontButton.Name = "selectTextBoxFontButton";
+            this.selectTextBoxFontButton.Size = new System.Drawing.Size(75, 23);
+            this.selectTextBoxFontButton.TabIndex = 62;
+            this.selectTextBoxFontButton.Text = "選択";
+            this.selectTextBoxFontButton.UseVisualStyleBackColor = true;
+            this.selectTextBoxFontButton.Click += new System.EventHandler(this.selectTextBoxFontButton_Click);
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1574,6 +1719,8 @@ namespace RockbarForEDCB
             this.otherTabPage.PerformLayout();
             this.contextMenuFontColorTabPage.ResumeLayout(false);
             this.contextMenuFontColorTabPage.PerformLayout();
+            this.controlUiFontColorTabPage.ResumeLayout(false);
+            this.controlUiFontColorTabPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1700,6 +1847,7 @@ namespace RockbarForEDCB
         private System.Windows.Forms.TextBox formBackColorTextBox;
         private System.Windows.Forms.Button selectFormBackColorButton;
         private System.Windows.Forms.TabPage contextMenuFontColorTabPage;
+        private System.Windows.Forms.TabPage controlUiFontColorTabPage;
         private System.Windows.Forms.Label ngReserveMenuBackColorLabel;
         private System.Windows.Forms.TextBox ngReserveMenuBackColorTextBox;
         private System.Windows.Forms.Button selectNgReserveMenuBackColorButton;
@@ -1718,5 +1866,17 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label menuFontLabel;
         private System.Windows.Forms.TextBox menuFontTextBox;
         private System.Windows.Forms.Button selectMenuFontButton;
+        private System.Windows.Forms.Label tabFontLabel;
+        private System.Windows.Forms.TextBox tabFontTextBox;
+        private System.Windows.Forms.Button selectTabFontButton;
+        private System.Windows.Forms.Label buttonFontLabel;
+        private System.Windows.Forms.TextBox buttonFontTextBox;
+        private System.Windows.Forms.Button selectButtonFontButton;
+        private System.Windows.Forms.Label labelFontLabel;
+        private System.Windows.Forms.TextBox labelFontTextBox;
+        private System.Windows.Forms.Button selectLabelFontButton;
+        private System.Windows.Forms.Label textBoxFontLabel;
+        private System.Windows.Forms.TextBox textBoxFontTextBox;
+        private System.Windows.Forms.Button selectTextBoxFontButton;
     }
 }

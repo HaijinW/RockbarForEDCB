@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -186,6 +187,11 @@ namespace RockbarForEDCB
             partialReserveMenuBackColorTextBox.Text = setting.PartialReserveMenuBackColor;
             ngReserveMenuBackColorTextBox.Text = setting.NgReserveMenuBackColor;
 
+            tabFontTextBox.Text = setting.TabFont;
+            buttonFontTextBox.Text = setting.ButtonFont;
+            labelFontTextBox.Text = setting.LabelFont;
+            textBoxFontTextBox.Text = setting.TextBoxFont;
+
             TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
 
             previewFormPanel.BackColor = (Color)colorConverter.ConvertFromString(setting.FormBackColor);
@@ -358,6 +364,57 @@ namespace RockbarForEDCB
                 item.Name = RockbarUtility.GetKey(service.Tsid, service.Sid);
                 favoriteServiceListView.Items.Add(item);
             }
+
+            // コントロールUIのフォント設定を適用
+            applyUiFontSettings();
+        }
+
+        /// <summary>
+        /// コントロールUIのフォント設定を適用
+        /// </summary>
+        private void applyUiFontSettings()
+        {
+            try
+            {
+                TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
+                Font tabFont = (Font)fontConverter.ConvertFromString(tabFontTextBox.Text);
+                Font buttonFont = (Font)fontConverter.ConvertFromString(buttonFontTextBox.Text);
+                Font labelFont = (Font)fontConverter.ConvertFromString(labelFontTextBox.Text);
+                Font textBoxFont = (Font)fontConverter.ConvertFromString(textBoxFontTextBox.Text);
+
+                Type settingType = this.GetType();
+                FieldInfo[] fieldInfos = settingType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+                foreach (FieldInfo fieldInfo in fieldInfos)
+                {
+                    string typeName = fieldInfo.FieldType.Name;
+                    if (typeName == "TabControl")
+                    {
+                        TabControl obj = fieldInfo.GetValue(this) as TabControl;
+                        obj.Font = tabFont;
+                    }
+                    else if (typeName == "Button")
+                    {
+                        Button obj = fieldInfo.GetValue(this) as Button;
+                        obj.Font = buttonFont;
+                    }
+                    else if (typeName == "Label" || typeName == "CheckBox" || typeName == "GroupBox" || typeName == "ListView")
+                    {
+                        Control obj = fieldInfo.GetValue(this) as Control;
+                        obj.Font = labelFont;
+                    }
+                    else if (typeName == "TextBox" || typeName == "NumericUpDown")
+                    {
+                        Control obj = fieldInfo.GetValue(this) as Control;
+                        obj.Font = textBoxFont;
+                    }
+                }
+                foreach (ListViewItem item in selectedServiceListView.Items)
+                {
+                    item.Font = labelFont;
+                }
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -668,6 +725,11 @@ namespace RockbarForEDCB
             rockbarSetting.OkReserveMenuBackColor = okReserveMenuBackColorTextBox.Text;
             rockbarSetting.PartialReserveMenuBackColor = partialReserveMenuBackColorTextBox.Text;
             rockbarSetting.NgReserveMenuBackColor = ngReserveMenuBackColorTextBox.Text;
+
+            rockbarSetting.TabFont = tabFontTextBox.Text;
+            rockbarSetting.ButtonFont = buttonFontTextBox.Text;
+            rockbarSetting.LabelFont = labelFontTextBox.Text;
+            rockbarSetting.TextBoxFont = textBoxFontTextBox.Text;
 
             rockbarSetting.BonDriverNameToTunerName = new Dictionary<string, string>();
 
@@ -1138,6 +1200,98 @@ namespace RockbarForEDCB
             {
                 ngReserveMenuBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
                 previewMenuListView.Items[3].BackColor = colorDialog.Color;
+            }
+        }
+
+        /// <summary>
+        /// タブのフォント選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectTabFontButton_Click(object sender, EventArgs e)
+        {
+            // フォント選択ダイアログを開いて設定値を反映
+            TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
+
+            if (tabFontTextBox.Text != null)
+            {
+                fontDialog.Font = (Font)fontConverter.ConvertFromString(tabFontTextBox.Text);
+            }
+
+            DialogResult result = fontDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                tabFontTextBox.Text = fontConverter.ConvertToString(fontDialog.Font);
+            }
+        }
+
+        /// <summary>
+        /// ボタンのフォント選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectButtonFontButton_Click(object sender, EventArgs e)
+        {
+            // フォント選択ダイアログを開いて設定値を反映
+            TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
+
+            if (buttonFontTextBox.Text != null)
+            {
+                fontDialog.Font = (Font)fontConverter.ConvertFromString(buttonFontTextBox.Text);
+            }
+
+            DialogResult result = fontDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                buttonFontTextBox.Text = fontConverter.ConvertToString(fontDialog.Font);
+            }
+        }
+
+        /// <summary>
+        /// ラベルのフォント選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectLabelFontButton_Click(object sender, EventArgs e)
+        {
+            // フォント選択ダイアログを開いて設定値を反映
+            TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
+
+            if (labelFontTextBox.Text != null)
+            {
+                fontDialog.Font = (Font)fontConverter.ConvertFromString(labelFontTextBox.Text);
+            }
+
+            DialogResult result = fontDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                labelFontTextBox.Text = fontConverter.ConvertToString(fontDialog.Font);
+            }
+        }
+
+        /// <summary>
+        /// テキストボックスのフォント選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectTextBoxFontButton_Click(object sender, EventArgs e)
+        {
+            // フォント選択ダイアログを開いて設定値を反映
+            TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
+
+            if (textBoxFontTextBox.Text != null)
+            {
+                fontDialog.Font = (Font)fontConverter.ConvertFromString(textBoxFontTextBox.Text);
+            }
+
+            DialogResult result = fontDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                textBoxFontTextBox.Text = fontConverter.ConvertToString(fontDialog.Font);
             }
         }
     }
