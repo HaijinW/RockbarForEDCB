@@ -40,6 +40,8 @@ namespace RockbarForEDCB
         NG,
         // 番組消失
         DISAPPEARED,
+        // 予約無効
+        DISABLED,
     };
 
     /// <summary>
@@ -84,10 +86,14 @@ namespace RockbarForEDCB
             this.OkReserveListBackColor = colorConverter.ConvertToString(Color.DarkSlateGray);
             this.PartialReserveListBackColor = colorConverter.ConvertToString(Color.FromArgb(160, 160, 0));
             this.NgReserveListBackColor = colorConverter.ConvertToString(Color.Red);
+            this.DisabledReserveListBackColor = colorConverter.ConvertToString(Color.FromArgb(96, 96, 96));
+            this.ReserveListHeaderForeColor = this.ListBackColor;
+            this.ReserveListHeaderBackColor = colorConverter.ConvertToString(Color.FromArgb(20, 163, 90));
             this.MenuBackColor = colorConverter.ConvertToString(SystemColors.ControlLight);
             this.OkReserveMenuBackColor = colorConverter.ConvertToString(Color.FromArgb(192, 192, 225));
             this.PartialReserveMenuBackColor = colorConverter.ConvertToString(Color.Yellow);
             this.NgReserveMenuBackColor = colorConverter.ConvertToString(Color.Red);
+            this.DisabledReserveMenuBackColor = colorConverter.ConvertToString(Color.DarkGray);
 
             BonDriverNameToTunerName = new Dictionary<string, string>();
         }
@@ -156,6 +162,12 @@ namespace RockbarForEDCB
         public string PartialReserveListBackColor { get; set; }
         // 予約不可リスト背景色(シリアライズしたもの)
         public string NgReserveListBackColor { get; set; }
+        // 無効予約リスト背景色(シリアライズしたもの)
+        public string DisabledReserveListBackColor { get; set; }
+        // 予約一覧ヘッダ文字色(シリアライズしたもの)
+        public string ReserveListHeaderForeColor { get; set; }
+        // 予約一覧ヘッダ背景色(シリアライズしたもの)
+        public string ReserveListHeaderBackColor { get; set; }
         // メニューフォント(シリアライズしたもの)
         public string MenuFont { get; set; }
         // メニュー背景色(シリアライズしたもの)
@@ -166,6 +178,8 @@ namespace RockbarForEDCB
         public string PartialReserveMenuBackColor { get; set; }
         // 予約不可メニュー背景色(シリアライズしたもの)
         public string NgReserveMenuBackColor { get; set; }
+        // 無効予約メニュー背景色(シリアライズしたもの)
+        public string DisabledReserveMenuBackColor { get; set; }
         // タブのフォント(シリアライズしたもの)
         public string TabFont { get; set; }
         // ボタンのフォント(シリアライズしたもの)
@@ -286,6 +300,8 @@ namespace RockbarForEDCB
                     return "×";
                 case ReserveStatus.DISAPPEARED:
                     return "消";
+                case ReserveStatus.DISABLED:
+                    return "無";
                 default:
                     return null;
             }

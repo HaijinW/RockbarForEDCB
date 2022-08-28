@@ -177,6 +177,9 @@ namespace RockbarForEDCB
             okReserveListBackColorTextBox.Text = setting.OkReserveListBackColor;
             partialReserveListBackColorTextBox.Text = setting.PartialReserveListBackColor;
             ngReserveListBackColorTextBox.Text = setting.NgReserveListBackColor;
+            disabledReserveListBackColorTextBox.Text = setting.DisabledReserveListBackColor;
+            reserveListHeaderForeColorTextBox.Text = setting.ReserveListHeaderForeColor;
+            reserveListHeaderBackColorTextBox.Text = setting.ReserveListHeaderBackColor;
             foreColorTextBox.Text = setting.ForeColor;
 
             menuFontTextBox.Text = setting.MenuFont;
@@ -186,6 +189,7 @@ namespace RockbarForEDCB
             okReserveMenuBackColorTextBox.Text = setting.OkReserveMenuBackColor;
             partialReserveMenuBackColorTextBox.Text = setting.PartialReserveMenuBackColor;
             ngReserveMenuBackColorTextBox.Text = setting.NgReserveMenuBackColor;
+            disabledReserveMenuBackColorTextBox.Text = setting.DisabledReserveMenuBackColor;
 
             tabFontTextBox.Text = setting.TabFont;
             buttonFontTextBox.Text = setting.ButtonFont;
@@ -199,12 +203,16 @@ namespace RockbarForEDCB
             previewListView.Items[1].BackColor = (Color)colorConverter.ConvertFromString(setting.OkReserveListBackColor);
             previewListView.Items[2].BackColor = (Color)colorConverter.ConvertFromString(setting.PartialReserveListBackColor);
             previewListView.Items[3].BackColor = (Color)colorConverter.ConvertFromString(setting.NgReserveListBackColor);
+            previewListView.Items[4].BackColor = (Color)colorConverter.ConvertFromString(setting.DisabledReserveListBackColor);
+            previewListView.Items[5].BackColor = (Color)colorConverter.ConvertFromString(setting.ReserveListHeaderBackColor);
             previewListView.ForeColor = (Color)colorConverter.ConvertFromString(setting.ForeColor);
+            previewListView.Items[5].ForeColor = (Color)colorConverter.ConvertFromString(setting.ReserveListHeaderForeColor);
 
             previewMenuListView.BackColor = (Color)colorConverter.ConvertFromString(setting.MenuBackColor);
             previewMenuListView.Items[1].BackColor = (Color)colorConverter.ConvertFromString(setting.OkReserveMenuBackColor);
             previewMenuListView.Items[2].BackColor = (Color)colorConverter.ConvertFromString(setting.PartialReserveMenuBackColor);
             previewMenuListView.Items[3].BackColor = (Color)colorConverter.ConvertFromString(setting.NgReserveMenuBackColor);
+            previewMenuListView.Items[4].BackColor = (Color)colorConverter.ConvertFromString(setting.DisabledReserveMenuBackColor);
 
             // 設定値異常の場合、下限にする
             if (setting.AutoOpenMargin > autoOpenMarginNumericUpDown.Maximum || setting.AutoOpenMargin < autoOpenMarginNumericUpDown.Minimum)
@@ -718,6 +726,9 @@ namespace RockbarForEDCB
             rockbarSetting.OkReserveListBackColor = okReserveListBackColorTextBox.Text;
             rockbarSetting.PartialReserveListBackColor = partialReserveListBackColorTextBox.Text;
             rockbarSetting.NgReserveListBackColor = ngReserveListBackColorTextBox.Text;
+            rockbarSetting.DisabledReserveListBackColor = disabledReserveListBackColorTextBox.Text;
+            rockbarSetting.ReserveListHeaderForeColor = reserveListHeaderForeColorTextBox.Text;
+            rockbarSetting.ReserveListHeaderBackColor = reserveListHeaderBackColorTextBox.Text;
             rockbarSetting.ForeColor = foreColorTextBox.Text;
 
             rockbarSetting.MenuFont = menuFontTextBox.Text;
@@ -725,6 +736,7 @@ namespace RockbarForEDCB
             rockbarSetting.OkReserveMenuBackColor = okReserveMenuBackColorTextBox.Text;
             rockbarSetting.PartialReserveMenuBackColor = partialReserveMenuBackColorTextBox.Text;
             rockbarSetting.NgReserveMenuBackColor = ngReserveMenuBackColorTextBox.Text;
+            rockbarSetting.DisabledReserveMenuBackColor = disabledReserveMenuBackColorTextBox.Text;
 
             rockbarSetting.TabFont = tabFontTextBox.Text;
             rockbarSetting.ButtonFont = buttonFontTextBox.Text;
@@ -1084,6 +1096,78 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// リスト背景色(無効予約)選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectDisabledReserveListBackColorButton_Click(object sender, EventArgs e)
+        {
+            // カラー選択ダイアログを開いて設定値を反映
+            TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
+
+            if (disabledReserveListBackColorTextBox.Text != null)
+            {
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(disabledReserveListBackColorTextBox.Text);
+            }
+
+            DialogResult result = colorDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                disabledReserveListBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                previewListView.Items[4].BackColor = colorDialog.Color;
+            }
+        }
+
+        /// <summary>
+        /// 予約一覧ヘッダ文字色選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectReserveListHeaderForeColorButton_Click(object sender, EventArgs e)
+        {
+            // カラー選択ダイアログを開いて設定値を反映
+            TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
+
+            if (reserveListHeaderForeColorTextBox.Text != null)
+            {
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(reserveListHeaderForeColorTextBox.Text);
+            }
+
+            DialogResult result = colorDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                reserveListHeaderForeColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                previewListView.Items[5].ForeColor = colorDialog.Color;
+            }
+        }
+
+        /// <summary>
+        /// 予約一覧ヘッダ背景色選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectReserveListHeaderBackColorButton_Click(object sender, EventArgs e)
+        {
+            // カラー選択ダイアログを開いて設定値を反映
+            TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
+
+            if (reserveListHeaderBackColorTextBox.Text != null)
+            {
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(reserveListHeaderBackColorTextBox.Text);
+            }
+
+            DialogResult result = colorDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                reserveListHeaderBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                previewListView.Items[5].BackColor = colorDialog.Color;
+            }
+        }
+
+        /// <summary>
         /// メニューフォント選択ボタン押下処理
         /// </summary>
         /// <param name="sender">イベントソース</param>
@@ -1200,6 +1284,30 @@ namespace RockbarForEDCB
             {
                 ngReserveMenuBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
                 previewMenuListView.Items[3].BackColor = colorDialog.Color;
+            }
+        }
+
+        /// <summary>
+        /// メニュー背景色(無効予約)選択ボタン押下処理
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void selectDisabledReserveMenuBackColorButton_Click(object sender, EventArgs e)
+        {
+            // カラー選択ダイアログを開いて設定値を反映
+            TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
+
+            if (disabledReserveMenuBackColorTextBox.Text != null)
+            {
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(disabledReserveMenuBackColorTextBox.Text);
+            }
+
+            DialogResult result = colorDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                disabledReserveMenuBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                previewMenuListView.Items[4].BackColor = colorDialog.Color;
             }
         }
 

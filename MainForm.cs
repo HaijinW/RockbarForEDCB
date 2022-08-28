@@ -59,12 +59,19 @@ namespace RockbarForEDCB
         private Color okReserveListBackColor;
         private Color partialReserveListBackColor;
         private Color ngReserveListBackColor;
+        private Color disabledReserveListBackColor;
+        private Color reserveListHeaderForeColor;
+        private Color reserveListHeaderBackColor;
         private Color foreColor;
 
         private Color menuBackColor;
         private Color okReserveMenuBackColor;
         private Color partialReserveMenuBackColor;
         private Color ngReserveMenuBackColor;
+        private Color disabledReserveMenuBackColor;
+
+        // 予約一覧のヘッダ数
+        private int reserveListHeaderCount = 0;
 
         /// <summary>
         /// コンストラクタ
@@ -263,6 +270,9 @@ namespace RockbarForEDCB
             this.okReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.OkReserveListBackColor);
             this.partialReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.PartialReserveListBackColor);
             this.ngReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.NgReserveListBackColor);
+            this.disabledReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.DisabledReserveListBackColor);
+            this.reserveListHeaderForeColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ReserveListHeaderForeColor);
+            this.reserveListHeaderBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ReserveListHeaderBackColor);
             this.foreColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ForeColor);
 
             this.BackColor = this.formBackColor;
@@ -271,6 +281,7 @@ namespace RockbarForEDCB
             this.okReserveMenuBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.OkReserveMenuBackColor);
             this.partialReserveMenuBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.PartialReserveMenuBackColor);
             this.ngReserveMenuBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.NgReserveMenuBackColor);
+            this.disabledReserveMenuBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.DisabledReserveMenuBackColor);
 
             serviceListView.BackColor = this.listBackColor;
             serviceListView.ForeColor = this.foreColor;
@@ -346,57 +357,64 @@ namespace RockbarForEDCB
             // チャンネル一覧・チューナー一覧にキー情報だけでアイテムを表示する(対象放送波切り替え時も実行)
             if (isChannelRefresh)
             {
-                serviceListView.Items.Clear();
-
-                List<Service> services = null;
-
-                if (serviceTabControl.SelectedTab.Text == "お気に入り")
+                if (serviceTabControl.SelectedTab == reserveTabPage)
                 {
-                    services = favoriteServiceList;
+                    PrepareReserveList();
                 }
                 else
                 {
-                    services = allServiceList;
-                }
+                    serviceListView.Items.Clear();
 
-                // チャンネル表示
-                foreach (var service in services)
-                {
-                    string key = RockbarUtility.GetKey(service.Tsid, service.Sid);
+                    List<Service> services = null;
 
-                    if (! serviceMap.ContainsKey(key))
+                    if (serviceTabControl.SelectedTab.Text == "お気に入り")
                     {
-                        // 定義したチャンネルがEDCBからのデータにない場合はスキップ(ユーザには設定画面でわかるようにする)
-                        continue;
+                        services = favoriteServiceList;
+                    }
+                    else
+                    {
+                        services = allServiceList;
                     }
 
-                    var matchedService = serviceMap[key];
-
-                    if (serviceTabControl.SelectedTab == dttvTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.DTTV)
+                    // チャンネル表示
+                    foreach (var service in services)
                     {
-                        continue;
-                    }
-                    else if (serviceTabControl.SelectedTab == bsTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.BS)
-                    {
-                        continue;
-                    }
-                    else if (serviceTabControl.SelectedTab == csTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.CS)
-                    {
-                        continue;
-                    }
+                        string key = RockbarUtility.GetKey(service.Tsid, service.Sid);
 
-                    // 1回キーとチャンネル名だけで追加
-                    String[] data = {
-                        matchedService.serviceInfo.service_name,
-                        "",
-                        "",
-                        ""
-                    };
+                        if (! serviceMap.ContainsKey(key))
+                        {
+                            // 定義したチャンネルがEDCBからのデータにない場合はスキップ(ユーザには設定画面でわかるようにする)
+                            continue;
+                        }
 
-                    ListViewItem item = new ListViewItem(data);
-                    item.Name = key;
+                        var matchedService = serviceMap[key];
 
-                    serviceListView.Items.Add(item);
+                        if (serviceTabControl.SelectedTab == dttvTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.DTTV)
+                        {
+                            continue;
+                        }
+                        else if (serviceTabControl.SelectedTab == bsTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.BS)
+                        {
+                            continue;
+                        }
+                        else if (serviceTabControl.SelectedTab == csTabPage && RockbarUtility.GetServiceType(matchedService.serviceInfo.ONID) != ServiceType.CS)
+                        {
+                            continue;
+                        }
+
+                        // 1回キーとチャンネル名だけで追加
+                        String[] data = {
+                            matchedService.serviceInfo.service_name,
+                            "",
+                            "",
+                            ""
+                        };
+
+                        ListViewItem item = new ListViewItem(data);
+                        item.Name = key;
+
+                        serviceListView.Items.Add(item);
+                    }
                 }
 
                 adjustListViewColumns(serviceListView);
@@ -437,74 +455,88 @@ namespace RockbarForEDCB
                 adjustListViewColumns(tunerListView);
             }
 
-            // チャンネル一覧の追加済みアイテムに対して、現在放送中の番組情報を付与する
-            foreach (var service in serviceEvents)
+            if (serviceTabControl.SelectedTab == reserveTabPage)
             {
-                string key = RockbarUtility.GetKey(service.serviceInfo.TSID, service.serviceInfo.SID);
-
-                var ev = service.eventList.Find(x => x.start_time <= DateTime.Now && x.start_time.AddSeconds(x.durationSec) >= DateTime.Now);
-
-                // チャンネル一覧ListViewでこのサービスが表示対象
-                if (serviceListView.Items.ContainsKey(key))
+                RefreshReserveList();
+            }
+            else
+            {
+                // チャンネル一覧の追加済みアイテムに対して、現在放送中の番組情報を付与する
+                foreach (var service in serviceEvents)
                 {
-                    ListViewItem item = serviceListView.Items[key];
+                    string key = RockbarUtility.GetKey(service.serviceInfo.TSID, service.serviceInfo.SID);
 
-                    if (ev != null)
+                    var ev = service.eventList.Find(x => x.start_time <= DateTime.Now && x.start_time.AddSeconds(x.durationSec) >= DateTime.Now);
+
+                    // チャンネル一覧ListViewでこのサービスが表示対象
+                    if (serviceListView.Items.ContainsKey(key))
                     {
-                        // 現在放送中の番組あり
-                        string eventKey = RockbarUtility.GetKey(ev.transport_stream_id, ev.service_id, ev.event_id);
+                        ListViewItem item = serviceListView.Items[key];
 
-                        ReserveStatus reserveStatus = ReserveStatus.NONE;
-
-                        // 予約状態文字列を取得
-                        if (reserveMap.ContainsKey(eventKey)) {
-                            ReserveData reserveData = reserveMap[eventKey];
-
-                            reserveStatus = ReserveStatus.OK;
-
-                            if (reserveData.OverlapMode == 1)
-                            {
-                                reserveStatus = ReserveStatus.PARTIAL;
-                            }
-                            else if (reserveData.OverlapMode == 2)
-                            {
-                                reserveStatus = ReserveStatus.NG;
-                            }
-                        }
-
-                        string reserveString = RockbarUtility.GetReserveStatusString(reserveStatus);
-
-                        // 番組情報を表示
-                        item.SubItems[1].Text = ev.start_time.ToString("HH:mm") + '-' + ev.start_time.AddSeconds(ev.durationSec).ToString("HH:mm");
-                        item.SubItems[2].Text = reserveString;
-                        item.SubItems[3].Text = ev.ShortInfo?.event_name;
-                        item.ToolTipText = ev.ShortInfo?.event_name;
-
-                        // 色変更
-                        switch (reserveStatus)
+                        if (ev != null)
                         {
-                            case ReserveStatus.NONE:
-                                item.BackColor = this.listBackColor;
-                                break;
-                            case ReserveStatus.OK:
-                                item.BackColor = this.okReserveListBackColor;
-                                break;
-                            case ReserveStatus.PARTIAL:
-                                item.BackColor = this.partialReserveListBackColor;
-                                break;
-                            case ReserveStatus.NG:
-                                item.BackColor = this.ngReserveListBackColor;
-                                break;
+                            // 現在放送中の番組あり
+                            string eventKey = RockbarUtility.GetKey(ev.transport_stream_id, ev.service_id, ev.event_id);
+
+                            ReserveStatus reserveStatus = ReserveStatus.NONE;
+
+                            // 予約状態文字列を取得
+                            if (reserveMap.ContainsKey(eventKey)) {
+                                ReserveData reserveData = reserveMap[eventKey];
+
+                                reserveStatus = ReserveStatus.OK;
+
+                                if (reserveData.RecSetting.IsNoRec())
+                                {
+                                    reserveStatus = ReserveStatus.DISABLED;
+                                }
+                                else if (reserveData.OverlapMode == 1)
+                                {
+                                    reserveStatus = ReserveStatus.PARTIAL;
+                                }
+                                else if (reserveData.OverlapMode == 2)
+                                {
+                                    reserveStatus = ReserveStatus.NG;
+                                }
+                            }
+
+                            string reserveString = RockbarUtility.GetReserveStatusString(reserveStatus);
+
+                            // 番組情報を表示
+                            item.SubItems[1].Text = ev.start_time.ToString("HH:mm") + '-' + ev.start_time.AddSeconds(ev.durationSec).ToString("HH:mm");
+                            item.SubItems[2].Text = reserveString;
+                            item.SubItems[3].Text = ev.ShortInfo?.event_name;
+                            item.ToolTipText = ev.ShortInfo?.event_name;
+
+                            // 色変更
+                            switch (reserveStatus)
+                            {
+                                case ReserveStatus.NONE:
+                                    item.BackColor = this.listBackColor;
+                                    break;
+                                case ReserveStatus.OK:
+                                    item.BackColor = this.okReserveListBackColor;
+                                    break;
+                                case ReserveStatus.PARTIAL:
+                                    item.BackColor = this.partialReserveListBackColor;
+                                    break;
+                                case ReserveStatus.NG:
+                                    item.BackColor = this.ngReserveListBackColor;
+                                    break;
+                                case ReserveStatus.DISABLED:
+                                    item.BackColor = this.disabledReserveListBackColor;
+                                    break;
+                            }
                         }
-                    }
-                    else
-                    {
-                        // 現在放送中の番組なし
-                        item.SubItems[1].Text = "";
-                        item.SubItems[2].Text = "";
-                        item.SubItems[3].Text = "";
-                        item.ToolTipText = "";
-                        item.BackColor = this.listBackColor;
+                        else
+                        {
+                            // 現在放送中の番組なし
+                            item.SubItems[1].Text = "";
+                            item.SubItems[2].Text = "";
+                            item.SubItems[3].Text = "";
+                            item.ToolTipText = "";
+                            item.BackColor = this.listBackColor;
+                        }
                     }
                 }
             }
@@ -552,6 +584,162 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// 予約一覧の描画準備処理
+        /// </summary>
+        private void PrepareReserveList()
+        {
+            serviceListView.Items.Clear();
+            reserveListHeaderCount = 0;
+
+            // 一覧表示
+            string dateTextCache = "";
+            foreach (var reserveData in reserveDatas.OrderBy(r => r.StartTime))
+            {
+                DateTime startTime = reserveData.StartTime;
+                DateTime endTime = startTime.AddSeconds(reserveData.DurationSecond);
+                if (endTime < DateTime.Now)
+                {
+                    continue;
+                }
+
+                string onAirDate = startTime.ToString("yyyy/MM/dd(ddd)");
+                if (onAirDate != dateTextCache)
+                {
+                    String[] dateData = {
+                        onAirDate,
+                        "",
+                        "",
+                        ""
+                    };
+
+                    ListViewItem dateItem = new ListViewItem(dateData);
+                    dateItem.ForeColor = this.reserveListHeaderForeColor;
+                    dateItem.BackColor = this.reserveListHeaderBackColor;
+
+                    serviceListView.Items.Add(dateItem);
+                    dateTextCache = onAirDate;
+                    reserveListHeaderCount++;
+                }
+
+                String[] data = {
+                    reserveData.StationName,
+                    "",
+                    "",
+                    ""
+                };
+
+                ListViewItem item = new ListViewItem(data);
+                serviceListView.Items.Add(item);
+            }
+
+            adjustListViewColumns(serviceListView);
+        }
+
+        /// <summary>
+        /// 予約一覧の描画更新処理
+        /// </summary>
+        private void RefreshReserveList()
+        {
+            if (serviceListView.Items.Count < reserveDatas.Count + reserveListHeaderCount)
+            {
+                PrepareReserveList();
+            }
+
+            // 一覧表示
+            int index = 0;
+            int listViewCount = serviceListView.Items.Count;
+            string dateTextCache = "";
+            foreach (var reserveData in reserveDatas.OrderBy(r => r.StartTime))
+            {
+                DateTime startTime = reserveData.StartTime;
+                DateTime endTime = startTime.AddSeconds(reserveData.DurationSecond);
+                if (endTime < DateTime.Now)
+                {
+                    continue;
+                }
+
+                string onAirDate = startTime.ToString("yyyy/MM/dd(ddd)");
+                if (onAirDate != dateTextCache)
+                {
+                    ListViewItem dateItem = serviceListView.Items[index];
+                    dateItem.SubItems[0].Text = onAirDate;
+                    dateItem.SubItems[1].Text = "時間";
+                    dateItem.SubItems[3].Text = "番組名";
+                    dateItem.ForeColor = this.reserveListHeaderForeColor;
+                    dateItem.BackColor = this.reserveListHeaderBackColor;
+
+                    dateTextCache = onAirDate;
+                    index++;
+                    if (index >= listViewCount)
+                    {
+                        break;
+                    }
+                }
+
+                ReserveStatus reserveStatus = ReserveStatus.OK;
+
+                if (reserveData.RecSetting.IsNoRec())
+                {
+                    reserveStatus = ReserveStatus.DISABLED;
+                }
+                else if (reserveData.OverlapMode == 1)
+                {
+                    reserveStatus = ReserveStatus.PARTIAL;
+                }
+                else if (reserveData.OverlapMode == 2)
+                {
+                    reserveStatus = ReserveStatus.NG;
+                }
+
+                ListViewItem item = serviceListView.Items[index];
+                item.SubItems[0].Text = reserveData.StationName;
+                item.SubItems[1].Text = startTime.ToString("HH:mm") + '-' + endTime.ToString("HH:mm");
+                item.SubItems[2].Text = RockbarUtility.GetReserveStatusString(reserveStatus);
+                item.SubItems[3].Text = reserveData.Title;
+                item.Name = RockbarUtility.GetKey(reserveData.TransportStreamID, reserveData.ServiceID, reserveData.EventID);
+                item.ToolTipText = $"{startTime.ToString("yyyy/MM/dd(ddd) HH:mm")}-{endTime.ToString("HH:mm")} {reserveData.Title}";
+                item.ForeColor = this.foreColor;
+
+                // 無効予約の場合
+                if (reserveStatus == ReserveStatus.DISABLED)
+                {
+                    item.BackColor = this.disabledReserveListBackColor;
+                }
+                // 変な予約がある場合警告として色を変える
+                else if (reserveStatus == ReserveStatus.PARTIAL)
+                {
+                    // 一部予約の場合、黃背景色で警告
+                    item.BackColor = this.partialReserveListBackColor;
+                }
+                else if (reserveStatus == ReserveStatus.NG)
+                {
+                    // TU不足の場合、赤背景色で警告
+                    item.BackColor = this.ngReserveListBackColor;
+                }
+                else if (startTime <= DateTime.Now && endTime >= DateTime.Now)
+                {
+                    // 現在録画中の場合、正常予約背景色で表示
+                    item.BackColor = this.okReserveListBackColor;
+                }
+                else
+                {
+                    item.BackColor = this.listBackColor;
+                }
+
+                index++;
+                if (index >= listViewCount)
+                {
+                    break;
+                }
+            }
+
+            while (index < serviceListView.Items.Count)
+            {
+                serviceListView.Items.RemoveAt(index);
+            }
+        }
+
+        /// <summary>
         /// 設定ファイルの再読み込み処理
         /// </summary>
         private void ReloadSetting()
@@ -579,7 +767,11 @@ namespace RockbarForEDCB
             {
                 var item = serviceListView.Items[i];
 
-                if (
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    continue;
+                }
+                else if (
                     item.SubItems[0].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0 &&
                     item.SubItems[3].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0
                 )
@@ -618,7 +810,11 @@ namespace RockbarForEDCB
             // 予約ステータスを判別
             if (reserve != null)
             {
-                if (reserve.OverlapMode == 0)
+                if (reserve.RecSetting.IsNoRec())
+                {
+                    reserveStatus = ReserveStatus.DISABLED;
+                }
+                else if (reserve.OverlapMode == 0)
                 {
                     if (ev == null)
                     {
@@ -656,6 +852,9 @@ namespace RockbarForEDCB
                 case ReserveStatus.NG:
                     item.BackColor = this.ngReserveMenuBackColor;
                     break;
+                case ReserveStatus.DISABLED:
+                    item.BackColor = this.disabledReserveMenuBackColor;
+                    break;
             }
 
             string reserveString = RockbarUtility.GetReserveStatusString(reserveStatus);
@@ -680,29 +879,7 @@ namespace RockbarForEDCB
                 if (rockbarSetting.UseWebLink)
                 {
                     item.DropDownItems.Add(">>");
-                    item.DropDownItems[item.DropDownItems.Count - 1].Click += (s2, e2) =>
-                    {
-                        string url = rockbarSetting.WebLinkUrl;
-                        url = url.Replace("{ONID}", ev.original_network_id.ToString());
-                        url = url.Replace("{TSID}", ev.transport_stream_id.ToString());
-                        url = url.Replace("{SID}", ev.service_id.ToString());
-                        url = url.Replace("{EID}", ev.event_id.ToString());
-
-                        try
-                        {
-                            // URLがパースできるかどうかを事前判定しておく
-                            new Uri(url);
-
-                            var startInfo = new System.Diagnostics.ProcessStartInfo(url);
-                            startInfo.UseShellExecute = true;
-                            System.Diagnostics.Process.Start(startInfo);
-                        }
-                        catch
-                        {
-                            MessageBox.Show($"Web番組詳細URLが不正です。Web番組詳細URLの設定を見直してください。\nURL: {url}", "ブラウザ起動エラー");
-                            return;
-                        }
-                    };
+                    item.DropDownItems[item.DropDownItems.Count - 1].Click += (s2, e2) => accessWebUrl(ev);
 
                     item.DropDownItems.Add(new ToolStripSeparator());
                 }
@@ -735,6 +912,34 @@ namespace RockbarForEDCB
             }
 
             return item;
+        }
+
+        /// <summary>
+        /// Web番組詳細にアクセスする
+        /// </summary>
+        /// <param name="ev">番組情報</param>
+        private void accessWebUrl(EpgEventInfo ev)
+        {
+            string url = rockbarSetting.WebLinkUrl;
+            url = url.Replace("{ONID}", ev.original_network_id.ToString());
+            url = url.Replace("{TSID}", ev.transport_stream_id.ToString());
+            url = url.Replace("{SID}", ev.service_id.ToString());
+            url = url.Replace("{EID}", ev.event_id.ToString());
+
+            try
+            {
+                // URLがパースできるかどうかを事前判定しておく
+                new Uri(url);
+
+                var startInfo = new System.Diagnostics.ProcessStartInfo(url);
+                startInfo.UseShellExecute = true;
+                System.Diagnostics.Process.Start(startInfo);
+            }
+            catch
+            {
+                MessageBox.Show($"Web番組詳細URLが不正です。Web番組詳細URLの設定を見直してください。\nURL: {url}", "ブラウザ起動エラー");
+                return;
+            }
         }
 
         /// <summary>
@@ -790,14 +995,20 @@ namespace RockbarForEDCB
             return result;
         }
 
-    /// <summary>
-    /// チャンネル一覧マウスクリック時処理
-    /// 右クリック時、直近30件の番組情報をコンテキストメニューに表示。
-    /// </summary>
-    /// <param name="sender">イベントソース</param>
-    /// <param name="e">イベントパラメータ</param>
-    private void serviceListView_MouseClick(object sender, MouseEventArgs e)
+        /// <summary>
+        /// チャンネル一覧マウスクリック時処理
+        /// 右クリック時、直近30件の番組情報をコンテキストメニューに表示。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void serviceListView_MouseClick(object sender, MouseEventArgs e)
         {
+            if (serviceTabControl.SelectedTab == reserveTabPage)
+            {
+                reserveListView_MouseClick(sender, e);
+                return;
+            }
+
             // 右クリック
             // 現在の番組を含め、今後の番組を30件までコンテキストメニューで表示(TVRockの仕様踏襲)
             if (e.Button == MouseButtons.Right)
@@ -846,6 +1057,12 @@ namespace RockbarForEDCB
         /// <param name="e">イベントパラメータ</param>
         private void serviceListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (serviceTabControl.SelectedTab == reserveTabPage)
+            {
+                reserveListView_MouseDoubleClick(sender, e);
+                return;
+            }
+
             // TVTest使用時のみ
             if (! rockbarSetting.UseDoubleClickTvtest)
             {
@@ -869,6 +1086,148 @@ namespace RockbarForEDCB
                 {
                     // BS, CS
                     startTvTest(false, sv.serviceInfo.TSID, sv.serviceInfo.SID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// チャンネル一覧および予約一覧選択状態変更処理
+        /// ヘッダを選択しようとした場合、選択状態を解除する。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void serviceListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected && string.IsNullOrEmpty(e.Item.Name))
+            {
+                e.Item.Selected = false;
+            }
+        }
+
+        /// <summary>
+        /// 予約一覧マウスクリック処理
+        /// 右クリック時、対象の番組情報をコンテキストメニューに表示。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void reserveListView_MouseClick(object sender, MouseEventArgs e)
+        {
+            var selectedCount = serviceListView.SelectedItems.Count;
+            if (selectedCount == 0)
+            {
+                return;
+            }
+
+            // 右クリック
+            // 対象の番組情報をコンテキストメニューで表示
+            if (e.Button == MouseButtons.Right)
+            {
+                listContextMenuStrip.Items.Clear();
+
+                try
+                {
+                    // クリックした箇所が自動選択されるので拾う
+                    var selected = serviceListView.SelectedItems[0];
+
+                    EpgEventInfo ev = allEventMap[selected.Name];
+
+                    // Webリンク使用時のみ1行目にWebリンク用のボタンを表示
+                    if (rockbarSetting.UseWebLink)
+                    {
+                        var item = listContextMenuStrip.Items.Add(">>");
+                        item.Click += (s2, e2) => accessWebUrl(ev);
+
+                        listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    }
+
+                    var dateTime = $"{ev.start_time.ToString("yyyy/MM/dd(ddd) HH:mm")}-{ev.start_time.AddSeconds(ev.durationSec).ToString("HH:mm")}";
+                    var dateItem = listContextMenuStrip.Items.Add(dateTime);
+                    dateItem.Enabled = false;
+                    listContextMenuStrip.Items.Add(new ToolStripSeparator());
+
+                    // 予約情報をメニューに追加
+                    if (reserveMap.TryGetValue(selected.Name, out var reserveData))
+                    {
+                        // 予約コメントを追加
+                        if (! string.IsNullOrEmpty(reserveData.Comment))
+                        {
+                            var item = listContextMenuStrip.Items.Add(reserveData.Comment);
+                            item.Enabled = false;
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
+                    }
+
+                    // 基本情報をメニューに追加
+                    var shortStrs = RockbarUtility.BreakString(ev.ShortInfo?.text_char);
+
+                    if (shortStrs != null)
+                    {
+                        foreach (string str in shortStrs)
+                        {
+                            var item = listContextMenuStrip.Items.Add(str);
+                            item.Enabled = false;
+                        }
+                    }
+
+                    listContextMenuStrip.Items.Add(new ToolStripSeparator());
+
+                    // 拡張情報をメニューに追加
+                    var longStrs = RockbarUtility.BreakString(ev.ExtInfo?.text_char);
+
+                    if (longStrs != null)
+                    {
+                        foreach (string str in longStrs)
+                        {
+                            var item = listContextMenuStrip.Items.Add(str);
+                            item.Enabled = false;
+                        }
+                    }
+                }
+                catch
+                {
+                    listContextMenuStrip.Items.Add("番組情報を取得できませんでした");
+                }
+
+                listContextMenuStrip.Show((Control)sender, new Point(e.X, e.Y));
+            }
+        }
+
+        /// <summary>
+        /// 予約一覧マウスダブルクリック処理
+        /// Web LinkオプションがONの場合、カーソル箇所の番組のWeb番組情報にアクセスする。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void reserveListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // Web番組詳細使用時のみ
+            if (! rockbarSetting.UseWebLink)
+            {
+                return;
+            }
+
+            var selectedCount = serviceListView.SelectedItems.Count;
+            if (selectedCount == 0)
+            {
+                return;
+            }
+
+            // 左ダブルクリック
+            // Web番組詳細にアクセスする
+            if (e.Button == MouseButtons.Left)
+            {
+                try
+                {
+                    // クリックした箇所が自動選択されるので拾う
+                    var selected = serviceListView.SelectedItems[0];
+
+                    EpgEventInfo ev = allEventMap[selected.Name];
+                    accessWebUrl(ev);
+                }
+                catch
+                {
+                    MessageBox.Show("番組情報を取得できませんでした。", "ブラウザ起動エラー");
+                    return;
                 }
             }
         }
