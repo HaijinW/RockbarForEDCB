@@ -78,8 +78,10 @@ namespace RockbarForEDCB
             this.useWebLinkCheckBox = new System.Windows.Forms.CheckBox();
             this.ipAddressLabel = new System.Windows.Forms.Label();
             this.webLinkUrlLabel = new System.Windows.Forms.Label();
+            this.recInfoWebLinkUrlLabel = new System.Windows.Forms.Label();
             this.ipAddressTextBox = new System.Windows.Forms.TextBox();
             this.webLinkUrlTextBox = new System.Windows.Forms.TextBox();
+            this.recInfoWebLinkUrlTextBox = new System.Windows.Forms.TextBox();
             this.tunerTabPage = new System.Windows.Forms.TabPage();
             this.tunerNameLabel = new System.Windows.Forms.Label();
             this.tunerNameNoteLabel = new System.Windows.Forms.Label();
@@ -115,6 +117,7 @@ namespace RockbarForEDCB
             this.tvtestLinkageTabPage = new System.Windows.Forms.TabPage();
             this.tvtestDttvOptionExampleLabel = new System.Windows.Forms.Label();
             this.tvtestBscsOptionExampleLabel = new System.Windows.Forms.Label();
+            this.tvtestTsFileOptionExampleLabel = new System.Windows.Forms.Label();
             this.autoStartTargetGroupBox = new System.Windows.Forms.GroupBox();
             this.isAutoOpenFavoriteServiceCheckBox = new System.Windows.Forms.CheckBox();
             this.isAutoOpenDttvCheckBox = new System.Windows.Forms.CheckBox();
@@ -131,6 +134,8 @@ namespace RockbarForEDCB
             this.tvtestDttvOptionTextBox = new System.Windows.Forms.TextBox();
             this.tvtestBscsOptionLabel = new System.Windows.Forms.Label();
             this.tvtestBscsOptionTextBox = new System.Windows.Forms.TextBox();
+            this.tvtestTsFileOptionLabel = new System.Windows.Forms.Label();
+            this.tvtestTsFileOptionTextBox = new System.Windows.Forms.TextBox();
             this.tvtestPathLabel = new System.Windows.Forms.Label();
             this.tvtestOpenButton = new System.Windows.Forms.Button();
             this.tvtestPathTextBox = new System.Windows.Forms.TextBox();
@@ -144,6 +149,8 @@ namespace RockbarForEDCB
             this.toggleVisibleTaskTrayIconClickCheckBox = new System.Windows.Forms.CheckBox();
             this.storeTaskTrayByClosingCheckBox = new System.Windows.Forms.CheckBox();
             this.showTaskTraiIconCheckBox = new System.Windows.Forms.CheckBox();
+            this.recListMaxCountLabel = new System.Windows.Forms.Label();
+            this.recListMaxCountNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.tvtestOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.fontDialog = new System.Windows.Forms.FontDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
@@ -171,12 +178,12 @@ namespace RockbarForEDCB
             this.selectDisabledReserveListBackColorButton = new System.Windows.Forms.Button();
             this.disabledReserveListBackColorTextBox = new System.Windows.Forms.TextBox();
             this.disabledReserveListBackColorLabel = new System.Windows.Forms.Label();
-            this.selectReserveListHeaderForeColorButton = new System.Windows.Forms.Button();
-            this.reserveListHeaderForeColorTextBox = new System.Windows.Forms.TextBox();
-            this.reserveListHeaderForeColorLabel = new System.Windows.Forms.Label();
-            this.selectReserveListHeaderBackColorButton = new System.Windows.Forms.Button();
-            this.reserveListHeaderBackColorTextBox = new System.Windows.Forms.TextBox();
-            this.reserveListHeaderBackColorLabel = new System.Windows.Forms.Label();
+            this.selectListHeaderForeColorButton = new System.Windows.Forms.Button();
+            this.listHeaderForeColorTextBox = new System.Windows.Forms.TextBox();
+            this.listHeaderForeColorLabel = new System.Windows.Forms.Label();
+            this.selectListHeaderBackColorButton = new System.Windows.Forms.Button();
+            this.listHeaderBackColorTextBox = new System.Windows.Forms.TextBox();
+            this.listHeaderBackColorLabel = new System.Windows.Forms.Label();
             this.contextMenuFontColorTabPage = new System.Windows.Forms.TabPage();
             this.ngReserveMenuBackColorTextBox = new System.Windows.Forms.TextBox();
             this.selectNgReserveMenuBackColorButton = new System.Windows.Forms.Button();
@@ -215,6 +222,7 @@ namespace RockbarForEDCB
             this.settingTabControl.SuspendLayout();
             this.edcbLinkageTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portNumberNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recListMaxCountNumericUpDown)).BeginInit();
             this.tunerTabPage.SuspendLayout();
             this.allServiceTabPage.SuspendLayout();
             this.favoriteServiceTabPage.SuspendLayout();
@@ -399,8 +407,10 @@ namespace RockbarForEDCB
             this.edcbLinkageTabPage.Controls.Add(this.useWebLinkCheckBox);
             this.edcbLinkageTabPage.Controls.Add(this.ipAddressLabel);
             this.edcbLinkageTabPage.Controls.Add(this.webLinkUrlLabel);
+            this.edcbLinkageTabPage.Controls.Add(this.recInfoWebLinkUrlLabel);
             this.edcbLinkageTabPage.Controls.Add(this.ipAddressTextBox);
             this.edcbLinkageTabPage.Controls.Add(this.webLinkUrlTextBox);
+            this.edcbLinkageTabPage.Controls.Add(this.recInfoWebLinkUrlTextBox);
             this.edcbLinkageTabPage.Location = new System.Drawing.Point(4, 22);
             this.edcbLinkageTabPage.Name = "edcbLinkageTabPage";
             this.edcbLinkageTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -461,7 +471,7 @@ namespace RockbarForEDCB
             // webLinkUrlExampleLabel
             // 
             this.webLinkUrlExampleLabel.AutoSize = true;
-            this.webLinkUrlExampleLabel.Location = new System.Drawing.Point(120, 239);
+            this.webLinkUrlExampleLabel.Location = new System.Drawing.Point(120, 255);
             this.webLinkUrlExampleLabel.Name = "webLinkUrlExampleLabel";
             this.webLinkUrlExampleLabel.Size = new System.Drawing.Size(452, 84);
             this.webLinkUrlExampleLabel.TabIndex = 11;
@@ -480,7 +490,7 @@ namespace RockbarForEDCB
             // useWebLinkCheckBox
             // 
             this.useWebLinkCheckBox.AutoSize = true;
-            this.useWebLinkCheckBox.Location = new System.Drawing.Point(22, 173);
+            this.useWebLinkCheckBox.Location = new System.Drawing.Point(22, 153);
             this.useWebLinkCheckBox.Name = "useWebLinkCheckBox";
             this.useWebLinkCheckBox.Size = new System.Drawing.Size(170, 16);
             this.useWebLinkCheckBox.TabIndex = 3;
@@ -499,11 +509,20 @@ namespace RockbarForEDCB
             // webLinkUrlLabel
             // 
             this.webLinkUrlLabel.AutoSize = true;
-            this.webLinkUrlLabel.Location = new System.Drawing.Point(20, 204);
+            this.webLinkUrlLabel.Location = new System.Drawing.Point(20, 184);
             this.webLinkUrlLabel.Name = "webLinkUrlLabel";
             this.webLinkUrlLabel.Size = new System.Drawing.Size(96, 12);
             this.webLinkUrlLabel.TabIndex = 8;
             this.webLinkUrlLabel.Text = "Web番組詳細URL";
+            // 
+            // recInfoWebLinkUrlLabel
+            // 
+            this.recInfoWebLinkUrlLabel.AutoSize = true;
+            this.recInfoWebLinkUrlLabel.Location = new System.Drawing.Point(20, 220);
+            this.recInfoWebLinkUrlLabel.Name = "recInfoWebLinkUrlLabel";
+            this.recInfoWebLinkUrlLabel.Size = new System.Drawing.Size(96, 12);
+            this.recInfoWebLinkUrlLabel.TabIndex = 9;
+            this.recInfoWebLinkUrlLabel.Text = "Web録画詳細URL";
             // 
             // ipAddressTextBox
             // 
@@ -514,10 +533,17 @@ namespace RockbarForEDCB
             // 
             // webLinkUrlTextBox
             // 
-            this.webLinkUrlTextBox.Location = new System.Drawing.Point(122, 201);
+            this.webLinkUrlTextBox.Location = new System.Drawing.Point(122, 181);
             this.webLinkUrlTextBox.Name = "webLinkUrlTextBox";
             this.webLinkUrlTextBox.Size = new System.Drawing.Size(478, 19);
             this.webLinkUrlTextBox.TabIndex = 4;
+            // 
+            // recInfoWebLinkUrlTextBox
+            // 
+            this.recInfoWebLinkUrlTextBox.Location = new System.Drawing.Point(122, 217);
+            this.recInfoWebLinkUrlTextBox.Name = "recInfoWebLinkUrlTextBox";
+            this.recInfoWebLinkUrlTextBox.Size = new System.Drawing.Size(478, 19);
+            this.recInfoWebLinkUrlTextBox.TabIndex = 5;
             // 
             // tunerTabPage
             // 
@@ -806,6 +832,7 @@ namespace RockbarForEDCB
             // 
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestDttvOptionExampleLabel);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestBscsOptionExampleLabel);
+            this.tvtestLinkageTabPage.Controls.Add(this.tvtestTsFileOptionExampleLabel);
             this.tvtestLinkageTabPage.Controls.Add(this.autoStartTargetGroupBox);
             this.tvtestLinkageTabPage.Controls.Add(this.autoCloseMarginNumericUpDown);
             this.tvtestLinkageTabPage.Controls.Add(this.autoCloseMarginLabel);
@@ -818,6 +845,8 @@ namespace RockbarForEDCB
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestDttvOptionTextBox);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestBscsOptionLabel);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestBscsOptionTextBox);
+            this.tvtestLinkageTabPage.Controls.Add(this.tvtestTsFileOptionLabel);
+            this.tvtestLinkageTabPage.Controls.Add(this.tvtestTsFileOptionTextBox);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestPathLabel);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestOpenButton);
             this.tvtestLinkageTabPage.Controls.Add(this.tvtestPathTextBox);
@@ -847,16 +876,25 @@ namespace RockbarForEDCB
             this.tvtestBscsOptionExampleLabel.TabIndex = 24;
             this.tvtestBscsOptionExampleLabel.Text = "(例: BS/CS)\r\n/d BonDriver_PT3_S.dll";
             // 
+            // tvtestTsFileOptionExampleLabel
+            // 
+            this.tvtestTsFileOptionExampleLabel.AutoSize = true;
+            this.tvtestTsFileOptionExampleLabel.Location = new System.Drawing.Point(424, 126);
+            this.tvtestTsFileOptionExampleLabel.Name = "tvtestTsFileOptionExampleLabel";
+            this.tvtestTsFileOptionExampleLabel.Size = new System.Drawing.Size(121, 24);
+            this.tvtestTsFileOptionExampleLabel.TabIndex = 26;
+            this.tvtestTsFileOptionExampleLabel.Text = "(例: TS再生)\r\n/d BonDriver_Pipe.dll";
+            // 
             // autoStartTargetGroupBox
             // 
             this.autoStartTargetGroupBox.Controls.Add(this.isAutoOpenFavoriteServiceCheckBox);
             this.autoStartTargetGroupBox.Controls.Add(this.isAutoOpenDttvCheckBox);
             this.autoStartTargetGroupBox.Controls.Add(this.isAutoOpenCsCheckBox);
             this.autoStartTargetGroupBox.Controls.Add(this.isAutoOpenBsCheckBox);
-            this.autoStartTargetGroupBox.Location = new System.Drawing.Point(36, 261);
+            this.autoStartTargetGroupBox.Location = new System.Drawing.Point(36, 291);
             this.autoStartTargetGroupBox.Name = "autoStartTargetGroupBox";
             this.autoStartTargetGroupBox.Size = new System.Drawing.Size(229, 88);
-            this.autoStartTargetGroupBox.TabIndex = 6;
+            this.autoStartTargetGroupBox.TabIndex = 7;
             this.autoStartTargetGroupBox.TabStop = false;
             this.autoStartTargetGroupBox.Text = "対象チャンネル";
             // 
@@ -866,7 +904,7 @@ namespace RockbarForEDCB
             this.isAutoOpenFavoriteServiceCheckBox.Location = new System.Drawing.Point(7, 49);
             this.isAutoOpenFavoriteServiceCheckBox.Name = "isAutoOpenFavoriteServiceCheckBox";
             this.isAutoOpenFavoriteServiceCheckBox.Size = new System.Drawing.Size(196, 28);
-            this.isAutoOpenFavoriteServiceCheckBox.TabIndex = 9;
+            this.isAutoOpenFavoriteServiceCheckBox.TabIndex = 10;
             this.isAutoOpenFavoriteServiceCheckBox.Text = "お気に入りサービスのみ\r\n(地デジ／BS／CS設定との積集合)";
             this.isAutoOpenFavoriteServiceCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -876,7 +914,7 @@ namespace RockbarForEDCB
             this.isAutoOpenDttvCheckBox.Location = new System.Drawing.Point(7, 18);
             this.isAutoOpenDttvCheckBox.Name = "isAutoOpenDttvCheckBox";
             this.isAutoOpenDttvCheckBox.Size = new System.Drawing.Size(56, 16);
-            this.isAutoOpenDttvCheckBox.TabIndex = 6;
+            this.isAutoOpenDttvCheckBox.TabIndex = 7;
             this.isAutoOpenDttvCheckBox.Text = "地デジ";
             this.isAutoOpenDttvCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -886,7 +924,7 @@ namespace RockbarForEDCB
             this.isAutoOpenCsCheckBox.Location = new System.Drawing.Point(141, 18);
             this.isAutoOpenCsCheckBox.Name = "isAutoOpenCsCheckBox";
             this.isAutoOpenCsCheckBox.Size = new System.Drawing.Size(39, 16);
-            this.isAutoOpenCsCheckBox.TabIndex = 8;
+            this.isAutoOpenCsCheckBox.TabIndex = 9;
             this.isAutoOpenCsCheckBox.Text = "CS";
             this.isAutoOpenCsCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -896,13 +934,13 @@ namespace RockbarForEDCB
             this.isAutoOpenBsCheckBox.Location = new System.Drawing.Point(79, 18);
             this.isAutoOpenBsCheckBox.Name = "isAutoOpenBsCheckBox";
             this.isAutoOpenBsCheckBox.Size = new System.Drawing.Size(39, 16);
-            this.isAutoOpenBsCheckBox.TabIndex = 7;
+            this.isAutoOpenBsCheckBox.TabIndex = 8;
             this.isAutoOpenBsCheckBox.Text = "BS";
             this.isAutoOpenBsCheckBox.UseVisualStyleBackColor = true;
             // 
             // autoCloseMarginNumericUpDown
             // 
-            this.autoCloseMarginNumericUpDown.Location = new System.Drawing.Point(445, 290);
+            this.autoCloseMarginNumericUpDown.Location = new System.Drawing.Point(445, 320);
             this.autoCloseMarginNumericUpDown.Maximum = new decimal(new int[] {
             59,
             0,
@@ -910,7 +948,7 @@ namespace RockbarForEDCB
             0});
             this.autoCloseMarginNumericUpDown.Name = "autoCloseMarginNumericUpDown";
             this.autoCloseMarginNumericUpDown.Size = new System.Drawing.Size(70, 19);
-            this.autoCloseMarginNumericUpDown.TabIndex = 11;
+            this.autoCloseMarginNumericUpDown.TabIndex = 12;
             this.autoCloseMarginNumericUpDown.Value = new decimal(new int[] {
             5,
             0,
@@ -920,7 +958,7 @@ namespace RockbarForEDCB
             // autoCloseMarginLabel
             // 
             this.autoCloseMarginLabel.AutoSize = true;
-            this.autoCloseMarginLabel.Location = new System.Drawing.Point(285, 293);
+            this.autoCloseMarginLabel.Location = new System.Drawing.Point(285, 323);
             this.autoCloseMarginLabel.Name = "autoCloseMarginLabel";
             this.autoCloseMarginLabel.Size = new System.Drawing.Size(153, 12);
             this.autoCloseMarginLabel.TabIndex = 23;
@@ -928,7 +966,7 @@ namespace RockbarForEDCB
             // 
             // autoOpenMarginNumericUpDown
             // 
-            this.autoOpenMarginNumericUpDown.Location = new System.Drawing.Point(444, 261);
+            this.autoOpenMarginNumericUpDown.Location = new System.Drawing.Point(444, 291);
             this.autoOpenMarginNumericUpDown.Maximum = new decimal(new int[] {
             59,
             0,
@@ -936,7 +974,7 @@ namespace RockbarForEDCB
             0});
             this.autoOpenMarginNumericUpDown.Name = "autoOpenMarginNumericUpDown";
             this.autoOpenMarginNumericUpDown.Size = new System.Drawing.Size(70, 19);
-            this.autoOpenMarginNumericUpDown.TabIndex = 10;
+            this.autoOpenMarginNumericUpDown.TabIndex = 11;
             this.autoOpenMarginNumericUpDown.Value = new decimal(new int[] {
             15,
             0,
@@ -946,7 +984,7 @@ namespace RockbarForEDCB
             // autoOpenMarginLabel
             // 
             this.autoOpenMarginLabel.AutoSize = true;
-            this.autoOpenMarginLabel.Location = new System.Drawing.Point(285, 264);
+            this.autoOpenMarginLabel.Location = new System.Drawing.Point(285, 294);
             this.autoOpenMarginLabel.Name = "autoOpenMarginLabel";
             this.autoOpenMarginLabel.Size = new System.Drawing.Size(153, 12);
             this.autoOpenMarginLabel.TabIndex = 21;
@@ -955,10 +993,10 @@ namespace RockbarForEDCB
             // isAutoOpenTvtestCheckBox
             // 
             this.isAutoOpenTvtestCheckBox.AutoSize = true;
-            this.isAutoOpenTvtestCheckBox.Location = new System.Drawing.Point(16, 231);
+            this.isAutoOpenTvtestCheckBox.Location = new System.Drawing.Point(16, 261);
             this.isAutoOpenTvtestCheckBox.Name = "isAutoOpenTvtestCheckBox";
             this.isAutoOpenTvtestCheckBox.Size = new System.Drawing.Size(272, 16);
-            this.isAutoOpenTvtestCheckBox.TabIndex = 5;
+            this.isAutoOpenTvtestCheckBox.TabIndex = 6;
             this.isAutoOpenTvtestCheckBox.Text = "予約時間に合わせてTVTestを自動起動／終了する";
             this.isAutoOpenTvtestCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -966,7 +1004,7 @@ namespace RockbarForEDCB
             // 
             this.tvTestNoteLabel.AutoSize = true;
             this.tvTestNoteLabel.ForeColor = System.Drawing.Color.Red;
-            this.tvTestNoteLabel.Location = new System.Drawing.Point(100, 123);
+            this.tvTestNoteLabel.Location = new System.Drawing.Point(100, 153);
             this.tvTestNoteLabel.Name = "tvTestNoteLabel";
             this.tvTestNoteLabel.Size = new System.Drawing.Size(545, 48);
             this.tvTestNoteLabel.TabIndex = 19;
@@ -976,10 +1014,10 @@ namespace RockbarForEDCB
             // useDoubleClickTvtestCheckBox
             // 
             this.useDoubleClickTvtestCheckBox.AutoSize = true;
-            this.useDoubleClickTvtestCheckBox.Location = new System.Drawing.Point(16, 201);
+            this.useDoubleClickTvtestCheckBox.Location = new System.Drawing.Point(16, 231);
             this.useDoubleClickTvtestCheckBox.Name = "useDoubleClickTvtestCheckBox";
             this.useDoubleClickTvtestCheckBox.Size = new System.Drawing.Size(209, 16);
-            this.useDoubleClickTvtestCheckBox.TabIndex = 4;
+            this.useDoubleClickTvtestCheckBox.TabIndex = 5;
             this.useDoubleClickTvtestCheckBox.Text = "チャンネルダブルクリックでTVTestを起動";
             this.useDoubleClickTvtestCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -1014,6 +1052,22 @@ namespace RockbarForEDCB
             this.tvtestBscsOptionTextBox.Name = "tvtestBscsOptionTextBox";
             this.tvtestBscsOptionTextBox.Size = new System.Drawing.Size(312, 19);
             this.tvtestBscsOptionTextBox.TabIndex = 2;
+            // 
+            // tvtestTsFileOptionLabel
+            // 
+            this.tvtestTsFileOptionLabel.AutoSize = true;
+            this.tvtestTsFileOptionLabel.Location = new System.Drawing.Point(11, 127);
+            this.tvtestTsFileOptionLabel.Name = "tvtestTsFileOptionLabel";
+            this.tvtestTsFileOptionLabel.Size = new System.Drawing.Size(80, 12);
+            this.tvtestTsFileOptionLabel.TabIndex = 18;
+            this.tvtestTsFileOptionLabel.Text = "TS再生オプション";
+            // 
+            // tvtestTsFileOptionTextBox
+            // 
+            this.tvtestTsFileOptionTextBox.Location = new System.Drawing.Point(102, 124);
+            this.tvtestTsFileOptionTextBox.Name = "tvtestTsFileOptionTextBox";
+            this.tvtestTsFileOptionTextBox.Size = new System.Drawing.Size(312, 19);
+            this.tvtestTsFileOptionTextBox.TabIndex = 4;
             // 
             // tvtestPathLabel
             // 
@@ -1056,12 +1110,12 @@ namespace RockbarForEDCB
             this.listViewContColorTabPage.Controls.Add(this.disabledReserveListBackColorLabel);
             this.listViewContColorTabPage.Controls.Add(this.disabledReserveListBackColorTextBox);
             this.listViewContColorTabPage.Controls.Add(this.selectDisabledReserveListBackColorButton);
-            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderForeColorLabel);
-            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderForeColorTextBox);
-            this.listViewContColorTabPage.Controls.Add(this.selectReserveListHeaderForeColorButton);
-            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderBackColorLabel);
-            this.listViewContColorTabPage.Controls.Add(this.reserveListHeaderBackColorTextBox);
-            this.listViewContColorTabPage.Controls.Add(this.selectReserveListHeaderBackColorButton);
+            this.listViewContColorTabPage.Controls.Add(this.listHeaderForeColorLabel);
+            this.listViewContColorTabPage.Controls.Add(this.listHeaderForeColorTextBox);
+            this.listViewContColorTabPage.Controls.Add(this.selectListHeaderForeColorButton);
+            this.listViewContColorTabPage.Controls.Add(this.listHeaderBackColorLabel);
+            this.listViewContColorTabPage.Controls.Add(this.listHeaderBackColorTextBox);
+            this.listViewContColorTabPage.Controls.Add(this.selectListHeaderBackColorButton);
             this.listViewContColorTabPage.Controls.Add(this.previewListView);
             this.listViewContColorTabPage.Controls.Add(this.previewLabel);
             this.listViewContColorTabPage.Controls.Add(this.foreColorLabel);
@@ -1127,6 +1181,8 @@ namespace RockbarForEDCB
             this.otherTabPage.Controls.Add(this.toggleVisibleTaskTrayIconClickCheckBox);
             this.otherTabPage.Controls.Add(this.storeTaskTrayByClosingCheckBox);
             this.otherTabPage.Controls.Add(this.showTaskTraiIconCheckBox);
+            this.otherTabPage.Controls.Add(this.recListMaxCountLabel);
+            this.otherTabPage.Controls.Add(this.recListMaxCountNumericUpDown);
             this.otherTabPage.Location = new System.Drawing.Point(4, 22);
             this.otherTabPage.Name = "otherTabPage";
             this.otherTabPage.Size = new System.Drawing.Size(791, 384);
@@ -1173,6 +1229,37 @@ namespace RockbarForEDCB
             this.showTaskTraiIconCheckBox.TabIndex = 10;
             this.showTaskTraiIconCheckBox.Text = "タスクトレイに常時アイコンを表示する";
             this.showTaskTraiIconCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // recListMaxCountLabel
+            // 
+            this.recListMaxCountLabel.AutoSize = true;
+            this.recListMaxCountLabel.Location = new System.Drawing.Point(14, 122);
+            this.recListMaxCountLabel.Name = "recListMaxCountLabel";
+            this.recListMaxCountLabel.Size = new System.Drawing.Size(113, 12);
+            this.recListMaxCountLabel.TabIndex = 17;
+            this.recListMaxCountLabel.Text = "録画済み一覧の最大表示数(0～99999, 0=無制限)";
+            // 
+            // recListMaxCountNumericUpDown
+            // 
+            this.recListMaxCountNumericUpDown.Location = new System.Drawing.Point(264, 120);
+            this.recListMaxCountNumericUpDown.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.recListMaxCountNumericUpDown.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.recListMaxCountNumericUpDown.Name = "recListMaxCountNumericUpDown";
+            this.recListMaxCountNumericUpDown.Size = new System.Drawing.Size(70, 19);
+            this.recListMaxCountNumericUpDown.TabIndex = 16;
+            this.recListMaxCountNumericUpDown.Value = new decimal(new int[] {
+            RockBarSetting.DEFAULT_REC_LIST_MAX_COUNT,
+            0,
+            0,
+            0});
             // 
             // tvtestOpenFileDialog
             // 
@@ -1326,11 +1413,11 @@ namespace RockbarForEDCB
             // okReserveListBackColorLabel
             // 
             this.okReserveListBackColorLabel.AutoSize = true;
-            this.okReserveListBackColorLabel.Location = new System.Drawing.Point(19, 167);
+            this.okReserveListBackColorLabel.Location = new System.Drawing.Point(9, 167);
             this.okReserveListBackColorLabel.Name = "okReserveListBackColorLabel";
             this.okReserveListBackColorLabel.Size = new System.Drawing.Size(121, 12);
             this.okReserveListBackColorLabel.TabIndex = 55;
-            this.okReserveListBackColorLabel.Text = "リスト背景色(正常予約)";
+            this.okReserveListBackColorLabel.Text = "リスト背景色(正常予約等)";
             // 
             // selectPartialReserveListBackColorButton
             // 
@@ -1353,11 +1440,11 @@ namespace RockbarForEDCB
             // partialReserveListBackColorLabel
             // 
             this.partialReserveListBackColorLabel.AutoSize = true;
-            this.partialReserveListBackColorLabel.Location = new System.Drawing.Point(19, 205);
+            this.partialReserveListBackColorLabel.Location = new System.Drawing.Point(9, 205);
             this.partialReserveListBackColorLabel.Name = "partialReserveListBackColorLabel";
             this.partialReserveListBackColorLabel.Size = new System.Drawing.Size(121, 12);
             this.partialReserveListBackColorLabel.TabIndex = 58;
-            this.partialReserveListBackColorLabel.Text = "リスト背景色(部分予約)";
+            this.partialReserveListBackColorLabel.Text = "リスト背景色(部分予約等)";
             // 
             // selectNgReserveListBackColorButton
             // 
@@ -1380,11 +1467,11 @@ namespace RockbarForEDCB
             // ngReserveListBackColorLabel
             // 
             this.ngReserveListBackColorLabel.AutoSize = true;
-            this.ngReserveListBackColorLabel.Location = new System.Drawing.Point(19, 243);
+            this.ngReserveListBackColorLabel.Location = new System.Drawing.Point(9, 243);
             this.ngReserveListBackColorLabel.Name = "ngReserveListBackColorLabel";
             this.ngReserveListBackColorLabel.Size = new System.Drawing.Size(121, 12);
             this.ngReserveListBackColorLabel.TabIndex = 61;
-            this.ngReserveListBackColorLabel.Text = "リスト背景色(予約不可)";
+            this.ngReserveListBackColorLabel.Text = "リスト背景色(予約不可等)";
             // 
             // selectDisabledReserveListBackColorButton
             // 
@@ -1407,65 +1494,65 @@ namespace RockbarForEDCB
             // disabledReserveListBackColorLabel
             // 
             this.disabledReserveListBackColorLabel.AutoSize = true;
-            this.disabledReserveListBackColorLabel.Location = new System.Drawing.Point(19, 281);
+            this.disabledReserveListBackColorLabel.Location = new System.Drawing.Point(9, 281);
             this.disabledReserveListBackColorLabel.Name = "disabledReserveListBackColorLabel";
             this.disabledReserveListBackColorLabel.Size = new System.Drawing.Size(121, 12);
             this.disabledReserveListBackColorLabel.TabIndex = 61;
-            this.disabledReserveListBackColorLabel.Text = "リスト背景色(無効予約)";
+            this.disabledReserveListBackColorLabel.Text = "リスト背景色(無効予約等)";
             // 
-            // selectReserveListHeaderForeColorButton
+            // selectListHeaderForeColorButton
             // 
-            this.selectReserveListHeaderForeColorButton.Location = new System.Drawing.Point(290, 314);
-            this.selectReserveListHeaderForeColorButton.Name = "selectReserveListHeaderForeColorButton";
-            this.selectReserveListHeaderForeColorButton.Size = new System.Drawing.Size(75, 23);
-            this.selectReserveListHeaderForeColorButton.TabIndex = 59;
-            this.selectReserveListHeaderForeColorButton.Text = "選択";
-            this.selectReserveListHeaderForeColorButton.UseVisualStyleBackColor = true;
-            this.selectReserveListHeaderForeColorButton.Click += new System.EventHandler(this.selectReserveListHeaderForeColorButton_Click);
+            this.selectListHeaderForeColorButton.Location = new System.Drawing.Point(290, 314);
+            this.selectListHeaderForeColorButton.Name = "selectListHeaderForeColorButton";
+            this.selectListHeaderForeColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectListHeaderForeColorButton.TabIndex = 59;
+            this.selectListHeaderForeColorButton.Text = "選択";
+            this.selectListHeaderForeColorButton.UseVisualStyleBackColor = true;
+            this.selectListHeaderForeColorButton.Click += new System.EventHandler(this.selectListHeaderForeColorButton_Click);
             // 
-            // reserveListHeaderForeColorTextBox
+            // listHeaderForeColorTextBox
             // 
-            this.reserveListHeaderForeColorTextBox.Location = new System.Drawing.Point(148, 316);
-            this.reserveListHeaderForeColorTextBox.Name = "reserveListHeaderForeColorTextBox";
-            this.reserveListHeaderForeColorTextBox.ReadOnly = true;
-            this.reserveListHeaderForeColorTextBox.Size = new System.Drawing.Size(136, 19);
-            this.reserveListHeaderForeColorTextBox.TabIndex = 60;
+            this.listHeaderForeColorTextBox.Location = new System.Drawing.Point(148, 316);
+            this.listHeaderForeColorTextBox.Name = "listHeaderForeColorTextBox";
+            this.listHeaderForeColorTextBox.ReadOnly = true;
+            this.listHeaderForeColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.listHeaderForeColorTextBox.TabIndex = 60;
             // 
-            // reserveListHeaderForeColorLabel
+            // listHeaderForeColorLabel
             // 
-            this.reserveListHeaderForeColorLabel.AutoSize = true;
-            this.reserveListHeaderForeColorLabel.Location = new System.Drawing.Point(24, 319);
-            this.reserveListHeaderForeColorLabel.Name = "reserveListHeaderForeColorLabel";
-            this.reserveListHeaderForeColorLabel.Size = new System.Drawing.Size(121, 12);
-            this.reserveListHeaderForeColorLabel.TabIndex = 61;
-            this.reserveListHeaderForeColorLabel.Text = "予約一覧ヘッダ文字色";
+            this.listHeaderForeColorLabel.AutoSize = true;
+            this.listHeaderForeColorLabel.Location = new System.Drawing.Point(44, 319);
+            this.listHeaderForeColorLabel.Name = "listHeaderForeColorLabel";
+            this.listHeaderForeColorLabel.Size = new System.Drawing.Size(121, 12);
+            this.listHeaderForeColorLabel.TabIndex = 61;
+            this.listHeaderForeColorLabel.Text = "リストヘッダ文字色";
             // 
-            // selectReserveListHeaderBackColorButton
+            // selectListHeaderBackColorButton
             // 
-            this.selectReserveListHeaderBackColorButton.Location = new System.Drawing.Point(290, 352);
-            this.selectReserveListHeaderBackColorButton.Name = "selectReserveListHeaderBackColorButton";
-            this.selectReserveListHeaderBackColorButton.Size = new System.Drawing.Size(75, 23);
-            this.selectReserveListHeaderBackColorButton.TabIndex = 59;
-            this.selectReserveListHeaderBackColorButton.Text = "選択";
-            this.selectReserveListHeaderBackColorButton.UseVisualStyleBackColor = true;
-            this.selectReserveListHeaderBackColorButton.Click += new System.EventHandler(this.selectReserveListHeaderBackColorButton_Click);
+            this.selectListHeaderBackColorButton.Location = new System.Drawing.Point(290, 352);
+            this.selectListHeaderBackColorButton.Name = "selectListHeaderBackColorButton";
+            this.selectListHeaderBackColorButton.Size = new System.Drawing.Size(75, 23);
+            this.selectListHeaderBackColorButton.TabIndex = 59;
+            this.selectListHeaderBackColorButton.Text = "選択";
+            this.selectListHeaderBackColorButton.UseVisualStyleBackColor = true;
+            this.selectListHeaderBackColorButton.Click += new System.EventHandler(this.selectListHeaderBackColorButton_Click);
             // 
-            // reserveListHeaderBackColorTextBox
+            // listHeaderBackColorTextBox
             // 
-            this.reserveListHeaderBackColorTextBox.Location = new System.Drawing.Point(148, 354);
-            this.reserveListHeaderBackColorTextBox.Name = "reserveListHeaderBackColorTextBox";
-            this.reserveListHeaderBackColorTextBox.ReadOnly = true;
-            this.reserveListHeaderBackColorTextBox.Size = new System.Drawing.Size(136, 19);
-            this.reserveListHeaderBackColorTextBox.TabIndex = 60;
+            this.listHeaderBackColorTextBox.Location = new System.Drawing.Point(148, 354);
+            this.listHeaderBackColorTextBox.Name = "listHeaderBackColorTextBox";
+            this.listHeaderBackColorTextBox.ReadOnly = true;
+            this.listHeaderBackColorTextBox.Size = new System.Drawing.Size(136, 19);
+            this.listHeaderBackColorTextBox.TabIndex = 60;
             // 
-            // reserveListHeaderBackColorLabel
+            // listHeaderBackColorLabel
             // 
-            this.reserveListHeaderBackColorLabel.AutoSize = true;
-            this.reserveListHeaderBackColorLabel.Location = new System.Drawing.Point(24, 357);
-            this.reserveListHeaderBackColorLabel.Name = "reserveListHeaderBackColorLabel";
-            this.reserveListHeaderBackColorLabel.Size = new System.Drawing.Size(121, 12);
-            this.reserveListHeaderBackColorLabel.TabIndex = 61;
-            this.reserveListHeaderBackColorLabel.Text = "予約一覧ヘッダ背景色";
+            this.listHeaderBackColorLabel.AutoSize = true;
+            this.listHeaderBackColorLabel.Location = new System.Drawing.Point(44, 357);
+            this.listHeaderBackColorLabel.Name = "listHeaderBackColorLabel";
+            this.listHeaderBackColorLabel.Size = new System.Drawing.Size(121, 12);
+            this.listHeaderBackColorLabel.TabIndex = 61;
+            this.listHeaderBackColorLabel.Text = "リストヘッダ背景色";
             // 
             // contextMenuFontColorTabPage
             // 
@@ -1839,6 +1926,7 @@ namespace RockbarForEDCB
             this.edcbLinkageTabPage.ResumeLayout(false);
             this.edcbLinkageTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.portNumberNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.recListMaxCountNumericUpDown)).EndInit();
             this.tunerTabPage.ResumeLayout(false);
             this.tunerTabPage.PerformLayout();
             this.allServiceTabPage.ResumeLayout(false);
@@ -1891,6 +1979,8 @@ namespace RockbarForEDCB
         private System.Windows.Forms.CheckBox useWebLinkCheckBox;
         private System.Windows.Forms.Label webLinkUrlLabel;
         private System.Windows.Forms.TextBox webLinkUrlTextBox;
+        private System.Windows.Forms.Label recInfoWebLinkUrlLabel;
+        private System.Windows.Forms.TextBox recInfoWebLinkUrlTextBox;
         private System.Windows.Forms.TabPage favoriteServiceTabPage;
         private System.Windows.Forms.ListView selectedServiceListView2;
         private System.Windows.Forms.ColumnHeader selectedService2MarkColumnHeader;
@@ -1919,6 +2009,8 @@ namespace RockbarForEDCB
         private System.Windows.Forms.TextBox tvtestDttvOptionTextBox;
         private System.Windows.Forms.Label tvtestBscsOptionLabel;
         private System.Windows.Forms.TextBox tvtestBscsOptionTextBox;
+        private System.Windows.Forms.Label tvtestTsFileOptionLabel;
+        private System.Windows.Forms.TextBox tvtestTsFileOptionTextBox;
         private System.Windows.Forms.Label tvtestPathLabel;
         private System.Windows.Forms.Button tvtestOpenButton;
         private System.Windows.Forms.TextBox tvtestPathTextBox;
@@ -1941,8 +2033,11 @@ namespace RockbarForEDCB
         private System.Windows.Forms.TabPage otherTabPage;
         private System.Windows.Forms.CheckBox showTaskTraiIconCheckBox;
         private System.Windows.Forms.CheckBox isAutoOpenFavoriteServiceCheckBox;
+        private System.Windows.Forms.Label recListMaxCountLabel;
+        private System.Windows.Forms.NumericUpDown recListMaxCountNumericUpDown;
         private System.Windows.Forms.Label tvtestDttvOptionExampleLabel;
         private System.Windows.Forms.Label tvtestBscsOptionExampleLabel;
+        private System.Windows.Forms.Label tvtestTsFileOptionExampleLabel;
         private System.Windows.Forms.CheckBox toggleVisibleTaskTrayIconClickCheckBox;
         private System.Windows.Forms.CheckBox storeTaskTrayByClosingCheckBox;
         private System.Windows.Forms.FontDialog fontDialog;
@@ -1975,12 +2070,12 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label disabledReserveListBackColorLabel;
         private System.Windows.Forms.TextBox disabledReserveListBackColorTextBox;
         private System.Windows.Forms.Button selectDisabledReserveListBackColorButton;
-        private System.Windows.Forms.Label reserveListHeaderForeColorLabel;
-        private System.Windows.Forms.TextBox reserveListHeaderForeColorTextBox;
-        private System.Windows.Forms.Button selectReserveListHeaderForeColorButton;
-        private System.Windows.Forms.Label reserveListHeaderBackColorLabel;
-        private System.Windows.Forms.TextBox reserveListHeaderBackColorTextBox;
-        private System.Windows.Forms.Button selectReserveListHeaderBackColorButton;
+        private System.Windows.Forms.Label listHeaderForeColorLabel;
+        private System.Windows.Forms.TextBox listHeaderForeColorTextBox;
+        private System.Windows.Forms.Button selectListHeaderForeColorButton;
+        private System.Windows.Forms.Label listHeaderBackColorLabel;
+        private System.Windows.Forms.TextBox listHeaderBackColorTextBox;
+        private System.Windows.Forms.Button selectListHeaderBackColorButton;
         private System.Windows.Forms.ListView previewListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Label foreColorLabel;

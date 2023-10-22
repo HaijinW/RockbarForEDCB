@@ -30,6 +30,7 @@ namespace RockbarForEDCB
         private List<EpgServiceEventInfo> serviceEvents = new List<EpgServiceEventInfo>();
         private List<TunerReserveInfo> tunerReserveInfos = new List<TunerReserveInfo>();
         private List<ReserveData> reserveDatas = new List<ReserveData>();
+        private List<RecFileInfo> recFileInfos = new List<RecFileInfo>();
 
         // サービス一覧(+番組)の保持用(TSID + SID → サービス情報(+番組))
         private Dictionary<string, EpgServiceEventInfo> serviceMap = new Dictionary<string, EpgServiceEventInfo>();
@@ -39,6 +40,9 @@ namespace RockbarForEDCB
 
         // 予約情報の保持用(TSID + SID + EventID → 予約情報)
         private Dictionary<string, ReserveData> reserveMap = new Dictionary<string, ReserveData>();
+
+        // 録画済み情報の保持用(TSID + SID + EventID → 録画済み情報)
+        private Dictionary<uint, RecFileInfo> recMap = new Dictionary<uint, RecFileInfo>();
 
         // CSVサービスリストの格納
         private List<Service> allServiceList = null;
@@ -60,8 +64,8 @@ namespace RockbarForEDCB
         private Color partialReserveListBackColor;
         private Color ngReserveListBackColor;
         private Color disabledReserveListBackColor;
-        private Color reserveListHeaderForeColor;
-        private Color reserveListHeaderBackColor;
+        private Color listHeaderForeColor;
+        private Color listHeaderBackColor;
         private Color foreColor;
 
         private Color menuBackColor;
@@ -71,7 +75,7 @@ namespace RockbarForEDCB
         private Color disabledReserveMenuBackColor;
 
         // 予約一覧のヘッダ数
-        private int reserveListHeaderCount = 0;
+        private int listHeaderCount = 0;
 
         /// <summary>
         /// コンストラクタ
@@ -271,8 +275,8 @@ namespace RockbarForEDCB
             this.partialReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.PartialReserveListBackColor);
             this.ngReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.NgReserveListBackColor);
             this.disabledReserveListBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.DisabledReserveListBackColor);
-            this.reserveListHeaderForeColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ReserveListHeaderForeColor);
-            this.reserveListHeaderBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ReserveListHeaderBackColor);
+            this.listHeaderForeColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ListHeaderForeColor);
+            this.listHeaderBackColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ListHeaderBackColor);
             this.foreColor = (Color)colorConverter.ConvertFromString(rockbarSetting.ForeColor);
 
             this.BackColor = this.formBackColor;
@@ -352,6 +356,17 @@ namespace RockbarForEDCB
                 // チューナーごとの予約一覧取得
                 tunerReserveInfos.Clear();
                 ctrlCmdUtil.SendEnumTunerReserve(ref tunerReserveInfos);
+
+                // 録画済み情報の一覧取得
+                if (serviceTabControl.SelectedTab == recTabPage)
+                {
+                    FetchRecList();
+                }
+                else
+                {
+                    recFileInfos.Clear();
+                    recMap.Clear();
+                }
             }
 
             // チャンネル一覧・チューナー一覧にキー情報だけでアイテムを表示する(対象放送波切り替え時も実行)
@@ -360,6 +375,10 @@ namespace RockbarForEDCB
                 if (serviceTabControl.SelectedTab == reserveTabPage)
                 {
                     PrepareReserveList();
+                }
+                else if (serviceTabControl.SelectedTab == recTabPage)
+                {
+                    PrepareRecList();
                 }
                 else
                 {
@@ -458,6 +477,10 @@ namespace RockbarForEDCB
             if (serviceTabControl.SelectedTab == reserveTabPage)
             {
                 RefreshReserveList();
+            }
+            else if (serviceTabControl.SelectedTab == recTabPage)
+            {
+                RefreshRecList();
             }
             else
             {
@@ -589,7 +612,7 @@ namespace RockbarForEDCB
         private void PrepareReserveList()
         {
             serviceListView.Items.Clear();
-            reserveListHeaderCount = 0;
+            listHeaderCount = 0;
 
             // 一覧表示
             string dateTextCache = "";
@@ -613,12 +636,12 @@ namespace RockbarForEDCB
                     };
 
                     ListViewItem dateItem = new ListViewItem(dateData);
-                    dateItem.ForeColor = this.reserveListHeaderForeColor;
-                    dateItem.BackColor = this.reserveListHeaderBackColor;
+                    dateItem.ForeColor = this.listHeaderForeColor;
+                    dateItem.BackColor = this.listHeaderBackColor;
 
                     serviceListView.Items.Add(dateItem);
                     dateTextCache = onAirDate;
-                    reserveListHeaderCount++;
+                    listHeaderCount++;
                 }
 
                 String[] data = {
@@ -640,7 +663,7 @@ namespace RockbarForEDCB
         /// </summary>
         private void RefreshReserveList()
         {
-            if (serviceListView.Items.Count < reserveDatas.Count + reserveListHeaderCount)
+            if (serviceListView.Items.Count < reserveDatas.Count + listHeaderCount)
             {
                 PrepareReserveList();
             }
@@ -665,8 +688,8 @@ namespace RockbarForEDCB
                     dateItem.SubItems[0].Text = onAirDate;
                     dateItem.SubItems[1].Text = "時間";
                     dateItem.SubItems[3].Text = "番組名";
-                    dateItem.ForeColor = this.reserveListHeaderForeColor;
-                    dateItem.BackColor = this.reserveListHeaderBackColor;
+                    dateItem.ForeColor = this.listHeaderForeColor;
+                    dateItem.BackColor = this.listHeaderBackColor;
 
                     dateTextCache = onAirDate;
                     index++;
@@ -724,6 +747,177 @@ namespace RockbarForEDCB
                 else
                 {
                     item.BackColor = this.listBackColor;
+                }
+
+                index++;
+                if (index >= listViewCount)
+                {
+                    break;
+                }
+            }
+
+            while (index < serviceListView.Items.Count)
+            {
+                serviceListView.Items.RemoveAt(index);
+            }
+        }
+
+        /// <summary>
+        /// 録画済み一覧の取得処理
+        /// </summary>
+        private void FetchRecList()
+        {
+            recFileInfos.Clear();
+            recMap.Clear();
+            ctrlCmdUtil.SendEnumRecInfoBasic(ref recFileInfos);
+
+            int recListMaxCount = rockbarSetting.RecListMaxCount;
+            if (recListMaxCount > 0 && recFileInfos.Count > recListMaxCount)
+            {
+                recFileInfos = recFileInfos.GetRange(recFileInfos.Count - recListMaxCount, recListMaxCount);
+            }
+            recFileInfos.Reverse();
+
+            recMap = recFileInfos.ToDictionary(r => r.ID);
+        }
+
+        /// <summary>
+        /// 録画済み一覧の描画準備処理
+        /// </summary>
+        private void PrepareRecList()
+        {
+            if (recFileInfos.Count == 0)
+            {
+                FetchRecList();
+            }
+            
+            serviceListView.Items.Clear();
+            listHeaderCount = 0;
+
+            // 一覧表示
+            string dateTextCache = "";
+            foreach (var recFile in recFileInfos)
+            {
+                DateTime startTime = recFile.StartTime;
+                string onAirDate = startTime.ToString("yyyy/MM/dd(ddd)");
+                if (onAirDate != dateTextCache)
+                {
+                    String[] dateData = {
+                        onAirDate,
+                        "",
+                        "",
+                        ""
+                    };
+
+                    ListViewItem dateItem = new ListViewItem(dateData);
+                    dateItem.ForeColor = this.listHeaderForeColor;
+                    dateItem.BackColor = this.listHeaderBackColor;
+
+                    serviceListView.Items.Add(dateItem);
+                    dateTextCache = onAirDate;
+                    listHeaderCount++;
+                }
+
+                String[] data = {
+                    recFile.ServiceName,
+                    "",
+                    "",
+                    ""
+                };
+
+                ListViewItem item = new ListViewItem(data);
+                serviceListView.Items.Add(item);
+            }
+
+            adjustListViewColumns(serviceListView);
+        }
+
+        /// <summary>
+        /// 録画済み一覧の描画更新処理
+        /// </summary>
+        private void RefreshRecList()
+        {
+            if (serviceListView.Items.Count < recFileInfos.Count + listHeaderCount)
+            {
+                PrepareRecList();
+            }
+
+            // 一覧表示
+            int index = 0;
+            int listViewCount = serviceListView.Items.Count;
+            string dateTextCache = "";
+            foreach (var recFile in recFileInfos)
+            {
+                DateTime startTime = recFile.StartTime;
+                DateTime endTime = startTime.AddSeconds(recFile.DurationSecond);
+
+                string onAirDate = startTime.ToString("yyyy/MM/dd(ddd)");
+                if (onAirDate != dateTextCache)
+                {
+                    ListViewItem dateItem = serviceListView.Items[index];
+                    dateItem.SubItems[0].Text = onAirDate;
+                    dateItem.SubItems[1].Text = "時間";
+                    dateItem.SubItems[3].Text = "番組名";
+                    dateItem.ForeColor = this.listHeaderForeColor;
+                    dateItem.BackColor = this.listHeaderBackColor;
+
+                    dateTextCache = onAirDate;
+                    index++;
+                    if (index >= listViewCount)
+                    {
+                        break;
+                    }
+                }
+
+                RecEndStatus recEndStatus = (RecEndStatus) recFile.RecStatus;
+
+                ListViewItem item = serviceListView.Items[index];
+                item.SubItems[0].Text = recFile.ServiceName;
+                item.SubItems[1].Text = startTime.ToString("HH:mm") + '-' + endTime.ToString("HH:mm");
+                item.SubItems[2].Text = RockbarUtility.GetRecEndStatusString(recEndStatus);
+                item.SubItems[3].Text = recFile.Title;
+                item.Name = recFile.ID.ToString();
+                item.ToolTipText = createRecInfoTooltipTexts(recFile);
+                item.ForeColor = this.foreColor;
+
+                // 録画結果が正常の場合
+                if (recEndStatus == RecEndStatus.NORMAL || recEndStatus == RecEndStatus.CHG_TIME || recEndStatus == RecEndStatus.NEXT_START_END)
+                {
+                    if (recFile.Scrambles > 0)
+                    {
+                        // スクランブル解除漏れありの場合、黃背景色で警告
+                        item.BackColor = this.partialReserveListBackColor;
+                    }
+                    else if (recFile.Drops > 0)
+                    {
+                        // ドロップありの場合、赤背景色で警告
+                        item.BackColor = this.ngReserveListBackColor;
+                    }
+                    else
+                    {
+                        item.BackColor = this.listBackColor;
+                    }
+                }
+                // 録画結果が正常ではない場合
+                else if (recEndStatus == RecEndStatus.END_SUBREC)
+                {
+                    // サブフォルダへの録画の場合、ダークスレートグレー背景色で通知
+                    item.BackColor = this.okReserveListBackColor;
+                }
+                else if (recEndStatus == RecEndStatus.ERR_END || recEndStatus == RecEndStatus.END_SUBREC || recEndStatus == RecEndStatus.NOT_START_HEAD)
+                {
+                    // 録画中のエラー、一部のみ録画の場合、黃背景色で警告
+                    item.BackColor = this.partialReserveListBackColor;
+                }
+                else if (recEndStatus == RecEndStatus.NO_RECMODE)
+                {
+                    // 無効扱いの場合、グレー背景色で通知
+                    item.BackColor = this.disabledReserveListBackColor;
+                }
+                else
+                {
+                    // それ以外のエラーの場合、赤背景色で警告
+                    item.BackColor = this.ngReserveListBackColor;
                 }
 
                 index++;
@@ -915,6 +1109,50 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// 録画済み情報のテキスト生成処理
+        /// </summary>
+        /// <param name="recFile">録画済み情報</param>
+        private List<List<string>> createRecInfoDetailTexts(RecFileInfo recFile)
+        {
+            List<List<string>> detailTexts = new List<List<string>>();
+            var dateTimes = new List<string>() { $"{recFile.StartTime.ToString("yyyy/MM/dd(ddd) HH:mm")}-{recFile.StartTime.AddSeconds(recFile.DurationSecond).ToString("HH:mm")}" };
+            detailTexts.Add(dateTimes);
+
+            var services = new List<string>() { recFile.ServiceName, recFile.Title };
+            detailTexts.Add(services);
+
+            var results = new List<string>() { $"結果 : {recFile.Comment}" };
+            results.AddRange(RockbarUtility.BreakString($"録画ファイル : {recFile.RecFilePath}", 50));
+            detailTexts.Add(results);
+
+            var ids = new List<string>() {
+                $"OriginalNetworkID : {recFile.OriginalNetworkID} (0x{recFile.OriginalNetworkID.ToString("X4")})",
+                $"TransportStreamID : {recFile.TransportStreamID} (0x{recFile.TransportStreamID.ToString("X4")})",
+                $"ServiceID : {recFile.ServiceID} (0x{recFile.ServiceID.ToString("X4")})",
+                $"EventID : {recFile.EventID} (0x{recFile.EventID.ToString("X4")})"
+            };
+            detailTexts.Add(ids);
+
+            var scrambles = new List<string>() {
+                $"Drop : {recFile.Drops}",
+                $"Scramble : {recFile.Scrambles}"
+            };
+            detailTexts.Add(scrambles);
+
+            return detailTexts;
+        }
+
+        /// <summary>
+        /// 録画済み情報のツールチップテキスト生成処理
+        /// </summary>
+        /// <param name="recFile">録画済み情報</param>
+        private string createRecInfoTooltipTexts(RecFileInfo recFile)
+        {
+            var detailTexts = createRecInfoDetailTexts(recFile);
+            return string.Join("\n\n", detailTexts.Select(t => string.Join("\n", t)));
+        }
+
+        /// <summary>
         /// Web番組詳細にアクセスする
         /// </summary>
         /// <param name="ev">番組情報</param>
@@ -925,6 +1163,31 @@ namespace RockbarForEDCB
             url = url.Replace("{TSID}", ev.transport_stream_id.ToString());
             url = url.Replace("{SID}", ev.service_id.ToString());
             url = url.Replace("{EID}", ev.event_id.ToString());
+
+            try
+            {
+                // URLがパースできるかどうかを事前判定しておく
+                new Uri(url);
+
+                var startInfo = new System.Diagnostics.ProcessStartInfo(url);
+                startInfo.UseShellExecute = true;
+                System.Diagnostics.Process.Start(startInfo);
+            }
+            catch
+            {
+                MessageBox.Show($"Web番組詳細URLが不正です。Web番組詳細URLの設定を見直してください。\nURL: {url}", "ブラウザ起動エラー");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Web番組詳細にアクセスする
+        /// </summary>
+        /// <param name="recFile">録画済み情報</param>
+        private void accessWebUrl(RecFileInfo recFile)
+        {
+            string url = rockbarSetting.RecInfoWebLinkUrl;
+            url = url.Replace("{RecID}", recFile.ID.ToString());
 
             try
             {
@@ -996,6 +1259,28 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// TvtPlayプラグインを有効化してTVTest起動処理
+        /// ファイルパスとTvtPlayの起動オプションを指定してTVTestを起動する。
+        /// </summary>
+        /// <param name="filePath">ファイルパス</param>
+        /// <returns>TVTestプロセス</returns>
+        private System.Diagnostics.Process startTvtPlay(string filePath)
+        {
+            System.Diagnostics.Process result = null;
+
+            try
+            {
+                result = System.Diagnostics.Process.Start(rockbarSetting.TvtestPath, $"{rockbarSetting.TvtestTsFileOption} \"{filePath}\"");
+            }
+            catch
+            {
+                MessageBox.Show("TVTestの起動に失敗しました。TVTestの設定を見直してください。", "TVTest起動エラー");
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// チャンネル一覧マウスクリック時処理
         /// 右クリック時、直近30件の番組情報をコンテキストメニューに表示。
         /// </summary>
@@ -1006,6 +1291,11 @@ namespace RockbarForEDCB
             if (serviceTabControl.SelectedTab == reserveTabPage)
             {
                 reserveListView_MouseClick(sender, e);
+                return;
+            }
+            else if (serviceTabControl.SelectedTab == recTabPage)
+            {
+                recListView_MouseClick(sender, e);
                 return;
             }
 
@@ -1060,6 +1350,11 @@ namespace RockbarForEDCB
             if (serviceTabControl.SelectedTab == reserveTabPage)
             {
                 reserveListView_MouseDoubleClick(sender, e);
+                return;
+            }
+            else if (serviceTabControl.SelectedTab == recTabPage)
+            {
+                recListView_MouseDoubleClick(sender, e);
                 return;
             }
 
@@ -1228,6 +1523,141 @@ namespace RockbarForEDCB
                 {
                     MessageBox.Show("番組情報を取得できませんでした。", "ブラウザ起動エラー");
                     return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 録画済み情報マウスクリック処理
+        /// 右クリック時、対象の番組情報をコンテキストメニューに表示。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void recListView_MouseClick(object sender, MouseEventArgs e)
+        {
+            var selectedCount = serviceListView.SelectedItems.Count;
+            if (selectedCount == 0)
+            {
+                return;
+            }
+
+            // 右クリック
+            // 対象の番組情報をコンテキストメニューで表示
+            if (e.Button == MouseButtons.Right)
+            {
+                listContextMenuStrip.Items.Clear();
+
+                try
+                {
+                    // クリックした箇所が自動選択されるので拾う
+                    var selected = serviceListView.SelectedItems[0];
+                    uint recID;
+                    if (! uint.TryParse(selected.Name, out recID))
+                    {
+                        MessageBox.Show("録画情報IDの取得に失敗しました。", "録画情報IDエラー");
+                        return;
+                    }
+
+                    RecFileInfo recFile = recMap[recID];
+
+                    // Webリンク使用時のみ1行目にWebリンク用のボタンを表示
+                    if (rockbarSetting.UseWebLink)
+                    {
+                        var item = listContextMenuStrip.Items.Add(">>");
+                        item.Click += (s2, e2) => accessWebUrl(recFile);
+
+                        listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    }
+
+                    var detailTexts = createRecInfoDetailTexts(recFile);
+                    if (detailTexts.Count > 0)
+                    {
+                        foreach (var texts in detailTexts.GetRange(0, detailTexts.Count - 1))
+                        {
+                            if (texts.Count == 0)
+                            {
+                                continue;
+                            }
+                            foreach (var text in texts)
+                            {
+                                var item = listContextMenuStrip.Items.Add(text);
+                                item.Enabled = false;
+                            }
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
+                        var lastTexts = detailTexts[detailTexts.Count - 1];
+                        if (lastTexts.Count > 0)
+                        {
+                            foreach (var text in lastTexts)
+                            {
+                                var item = listContextMenuStrip.Items.Add(text);
+                                item.Enabled = false;
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    listContextMenuStrip.Items.Add("番組情報を取得できませんでした");
+                }
+
+                listContextMenuStrip.Show((Control)sender, new Point(e.X, e.Y));
+            }
+        }
+
+        /// <summary>
+        /// 録画済み情報マウスダブルクリック処理
+        /// TVTest使用オプションがONの場合、カーソル箇所の番組を対象にTVTestを起動する。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void recListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // TVTest使用時のみ
+            if (! rockbarSetting.UseDoubleClickTvtest)
+            {
+                return;
+            }
+
+            var selectedCount = serviceListView.SelectedItems.Count;
+            if (selectedCount == 0)
+            {
+                return;
+            }
+
+            // 左ダブルクリック
+            // TVTestを起動する
+            if (e.Button == MouseButtons.Left)
+            {
+                // クリックした箇所が自動選択されるので拾う
+                var selected = serviceListView.SelectedItems[0];
+
+                uint recID;
+                if (! uint.TryParse(selected.Name, out recID))
+                {
+                    MessageBox.Show("録画情報IDの取得に失敗しました。", "録画情報IDエラー");
+                    return;
+                }
+
+                RecFileInfo recFile = recMap[recID];
+
+                if (rockbarSetting.UseTcpIp && rockbarSetting.IpAddress.IndexOf("127.0.0.1") < 0)
+                {
+                    string networkPath = "";
+                    ErrCode errCode = ctrlCmdUtil.SendGetRecFileNetworkPath(recFile.RecFilePath, ref networkPath);
+                    if (errCode != ErrCode.CMD_SUCCESS || string.IsNullOrEmpty(networkPath))
+                    {
+                        MessageBox.Show("ネットワークパスの取得に失敗しました。EDCBの設定を見直してください。", "ネットワークパスエラー");
+                        return;
+                    }
+
+                    // TvtPlay
+                    startTvtPlay(networkPath);
+                }
+                else
+                {
+                    // TvtPlay
+                    startTvtPlay(recFile.RecFilePath);
                 }
             }
         }

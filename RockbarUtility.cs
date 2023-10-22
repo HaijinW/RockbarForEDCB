@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using EpgTimer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -67,9 +68,11 @@ namespace RockbarForEDCB
             this.PortNumber = 4510;
             this.UseWebLink = true;
             this.WebLinkUrl = "http://localhost:5510/EMWUI/epginfo.html?onid={ONID}&tsid={TSID}&sid={SID}&eid={EID}";
+            this.RecInfoWebLinkUrl = "http://localhost:5510/EMWUI/recinfodesc.html?id={RecID}";
             this.AutoOpenMargin = 15;
             this.AutoCloseMargin = 5;
             this.ShowTaskTrayIcon = true;
+            this.RecListMaxCount = DEFAULT_REC_LIST_MAX_COUNT;
 
             TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
             this.Font = fontConverter.ConvertToString(SystemFonts.DefaultFont);
@@ -87,8 +90,8 @@ namespace RockbarForEDCB
             this.PartialReserveListBackColor = colorConverter.ConvertToString(Color.FromArgb(160, 160, 0));
             this.NgReserveListBackColor = colorConverter.ConvertToString(Color.Red);
             this.DisabledReserveListBackColor = colorConverter.ConvertToString(Color.FromArgb(96, 96, 96));
-            this.ReserveListHeaderForeColor = this.ListBackColor;
-            this.ReserveListHeaderBackColor = colorConverter.ConvertToString(Color.FromArgb(20, 163, 90));
+            this.ListHeaderForeColor = this.ListBackColor;
+            this.ListHeaderBackColor = colorConverter.ConvertToString(Color.FromArgb(20, 163, 90));
             this.MenuBackColor = colorConverter.ConvertToString(SystemColors.ControlLight);
             this.OkReserveMenuBackColor = colorConverter.ConvertToString(Color.FromArgb(192, 192, 225));
             this.PartialReserveMenuBackColor = colorConverter.ConvertToString(Color.Yellow);
@@ -97,6 +100,9 @@ namespace RockbarForEDCB
 
             BonDriverNameToTunerName = new Dictionary<string, string>();
         }
+
+        // 録画一覧の最大表示数のデフォルト値
+        public const int DEFAULT_REC_LIST_MAX_COUNT = 1500;
 
         // 起動時x座標
         public int X { get; set; }
@@ -118,12 +124,16 @@ namespace RockbarForEDCB
         public bool UseWebLink { get; set; }
         // Web Link URL
         public string WebLinkUrl { get; set; }
+        // Web Link URL(録画結果)
+        public string RecInfoWebLinkUrl { get; set; }
         // TVTest.exeパス
         public string TvtestPath { get; set; }
         // TVTest BS/CSオプション
         public string TvtestBscsOption { get; set; }
         // TVTest 地デジオプション
         public string TvtestDttvOption { get; set; }
+        // TVTest TS再生オプション
+        public string TvtestTsFileOption { get; set; }
         // TVTestダブルクリック起動使用
         public bool UseDoubleClickTvtest { get; set; }
         // TVTest自動起動使用
@@ -148,6 +158,8 @@ namespace RockbarForEDCB
         public bool ToggleVisibleTaskTrayIconClick { get; set; }
         // 水平分割
         public bool IsHorizontalSplit { get; set; }
+        // 録画一覧の最大表示数
+        public int RecListMaxCount { get; set; }
         // フォント(シリアライズしたもの)
         public string Font { get; set; }
         // フォーム背景色(シリアライズしたもの)
@@ -164,10 +176,10 @@ namespace RockbarForEDCB
         public string NgReserveListBackColor { get; set; }
         // 無効予約リスト背景色(シリアライズしたもの)
         public string DisabledReserveListBackColor { get; set; }
-        // 予約一覧ヘッダ文字色(シリアライズしたもの)
-        public string ReserveListHeaderForeColor { get; set; }
-        // 予約一覧ヘッダ背景色(シリアライズしたもの)
-        public string ReserveListHeaderBackColor { get; set; }
+        // リストヘッダ文字色(シリアライズしたもの)
+        public string ListHeaderForeColor { get; set; }
+        // リストヘッダ背景色(シリアライズしたもの)
+        public string ListHeaderBackColor { get; set; }
         // メニューフォント(シリアライズしたもの)
         public string MenuFont { get; set; }
         // メニュー背景色(シリアライズしたもの)
@@ -206,11 +218,12 @@ namespace RockbarForEDCB
 
         /// <summary>
         /// 文字列分割処理
-        /// もとからある改行は残し、20文字以上ある行に改行を挿入する
+        /// もとからある改行は残し、lineCount文字以上ある行に改行を挿入する
         /// </summary>
         /// <param name="input">入力文字列</param>
+        /// <param name="lineCount">1行の文字数</param>
         /// <returns>文字列リスト(行毎)</returns>
-        public static List<string> BreakString(string input)
+        public static List<string> BreakString(string input, int lineCount = 30)
         {
             if (input == null)
             {
@@ -226,10 +239,10 @@ namespace RockbarForEDCB
             {
                 string temp = line.Trim();
 
-                while (temp.Length > 20)
+                while (temp.Length > lineCount)
                 {
-                    results.Add(temp.Substring(0, 20));
-                    temp = temp.Substring(20);
+                    results.Add(temp.Substring(0, lineCount));
+                    temp = temp.Substring(lineCount);
                 }
 
                 results.Add(temp);
@@ -304,6 +317,31 @@ namespace RockbarForEDCB
                     return "無";
                 default:
                     return null;
+            }
+        }
+
+        /// <summary>
+        /// 録画結果ステータスから録画結果ステータス識別文字列を返す
+        /// </summary>
+        /// <param name="recEndStatus">録画結果ステータス</param>
+        /// <returns>録画結果ステータス識別子</returns>
+        public static string GetRecEndStatusString(RecEndStatus recEndStatus)
+        {
+            switch (recEndStatus)
+            {
+                case RecEndStatus.NORMAL:
+                    return "◎";
+                case RecEndStatus.NEXT_START_END:
+                case RecEndStatus.CHG_TIME:
+                case RecEndStatus.END_SUBREC:
+                    return "○";
+                case RecEndStatus.ERR_END:
+                case RecEndStatus.NOT_START_HEAD:
+                    return "△";
+                case RecEndStatus.NO_RECMODE:
+                    return "無";
+                default:
+                    return "×";
             }
         }
 

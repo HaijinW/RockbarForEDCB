@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>RockbarForEDCB</RootNamespace>
     <AssemblyName>RockbarForEDCB</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -283,6 +283,7 @@
     </Compile>
     <EmbeddedResource Include="SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -327,7 +328,7 @@
   <Import Project="packages\Costura.Fody.5.7.0\build\Costura.Fody.targets" Condition="Exists('packages\Costura.Fody.5.7.0\build\Costura.Fody.targets')" />
   <PropertyGroup>
     <PostBuildEvent>del "$(TargetDir)*.xml"
-del "$(TargetDir)*.config"</PostBuildEvent>
+rem del "$(TargetDir)*.config"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

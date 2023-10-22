@@ -151,12 +151,23 @@ namespace RockbarForEDCB
             {
                 portNumberNumericUpDown.Value = setting.PortNumber;
             }
+            // 設定値異常の場合、デフォルトにする
+            if (setting.RecListMaxCount > recListMaxCountNumericUpDown.Maximum || setting.RecListMaxCount < recListMaxCountNumericUpDown.Minimum)
+            {
+                recListMaxCountNumericUpDown.Value = RockBarSetting.DEFAULT_REC_LIST_MAX_COUNT;
+            }
+            else
+            {
+                recListMaxCountNumericUpDown.Value = setting.RecListMaxCount;
+            }
             useWebLinkCheckBox.Checked = setting.UseWebLink;
             webLinkUrlTextBox.Text = setting.WebLinkUrl;
+            recInfoWebLinkUrlTextBox.Text = setting.RecInfoWebLinkUrl;
 
             tvtestPathTextBox.Text = setting.TvtestPath;
             tvtestBscsOptionTextBox.Text = setting.TvtestBscsOption;
             tvtestDttvOptionTextBox.Text = setting.TvtestDttvOption;
+            tvtestTsFileOptionTextBox.Text = setting.TvtestTsFileOption;
             useDoubleClickTvtestCheckBox.Checked = setting.UseDoubleClickTvtest;
             isAutoOpenTvtestCheckBox.Checked = setting.IsAutoOpenTvtest;
             isAutoOpenDttvCheckBox.Checked = setting.IsAutoOpenTvtestDttv;
@@ -178,8 +189,8 @@ namespace RockbarForEDCB
             partialReserveListBackColorTextBox.Text = setting.PartialReserveListBackColor;
             ngReserveListBackColorTextBox.Text = setting.NgReserveListBackColor;
             disabledReserveListBackColorTextBox.Text = setting.DisabledReserveListBackColor;
-            reserveListHeaderForeColorTextBox.Text = setting.ReserveListHeaderForeColor;
-            reserveListHeaderBackColorTextBox.Text = setting.ReserveListHeaderBackColor;
+            listHeaderForeColorTextBox.Text = setting.ListHeaderForeColor;
+            listHeaderBackColorTextBox.Text = setting.ListHeaderBackColor;
             foreColorTextBox.Text = setting.ForeColor;
 
             menuFontTextBox.Text = setting.MenuFont;
@@ -204,9 +215,9 @@ namespace RockbarForEDCB
             previewListView.Items[2].BackColor = (Color)colorConverter.ConvertFromString(setting.PartialReserveListBackColor);
             previewListView.Items[3].BackColor = (Color)colorConverter.ConvertFromString(setting.NgReserveListBackColor);
             previewListView.Items[4].BackColor = (Color)colorConverter.ConvertFromString(setting.DisabledReserveListBackColor);
-            previewListView.Items[5].BackColor = (Color)colorConverter.ConvertFromString(setting.ReserveListHeaderBackColor);
+            previewListView.Items[5].BackColor = (Color)colorConverter.ConvertFromString(setting.ListHeaderBackColor);
             previewListView.ForeColor = (Color)colorConverter.ConvertFromString(setting.ForeColor);
-            previewListView.Items[5].ForeColor = (Color)colorConverter.ConvertFromString(setting.ReserveListHeaderForeColor);
+            previewListView.Items[5].ForeColor = (Color)colorConverter.ConvertFromString(setting.ListHeaderForeColor);
 
             previewMenuListView.BackColor = (Color)colorConverter.ConvertFromString(setting.MenuBackColor);
             previewMenuListView.Items[1].BackColor = (Color)colorConverter.ConvertFromString(setting.OkReserveMenuBackColor);
@@ -703,10 +714,12 @@ namespace RockbarForEDCB
             rockbarSetting.PortNumber = (uint) portNumberNumericUpDown.Value;
             rockbarSetting.UseWebLink = useWebLinkCheckBox.Checked;
             rockbarSetting.WebLinkUrl = webLinkUrlTextBox.Text;
+            rockbarSetting.RecInfoWebLinkUrl = recInfoWebLinkUrlTextBox.Text;
 
             rockbarSetting.TvtestPath = tvtestPathTextBox.Text;
             rockbarSetting.TvtestBscsOption = tvtestBscsOptionTextBox.Text;
             rockbarSetting.TvtestDttvOption = tvtestDttvOptionTextBox.Text;
+            rockbarSetting.TvtestTsFileOption = tvtestTsFileOptionTextBox.Text;
             rockbarSetting.UseDoubleClickTvtest = useDoubleClickTvtestCheckBox.Checked;
             rockbarSetting.IsAutoOpenTvtest = isAutoOpenTvtestCheckBox.Checked;
             rockbarSetting.IsAutoOpenTvtestDttv = isAutoOpenDttvCheckBox.Checked;
@@ -719,6 +732,7 @@ namespace RockbarForEDCB
             rockbarSetting.StoreTaskTrayByClosing = storeTaskTrayByClosingCheckBox.Checked;
             rockbarSetting.ToggleVisibleTaskTrayIconClick = toggleVisibleTaskTrayIconClickCheckBox.Checked;
             rockbarSetting.IsHorizontalSplit = isHorizontalSplitCheckBox.Checked;
+            rockbarSetting.RecListMaxCount = (int) recListMaxCountNumericUpDown.Value;
 
             rockbarSetting.Font = fontTextBox.Text;
             rockbarSetting.FormBackColor = formBackColorTextBox.Text;
@@ -727,8 +741,8 @@ namespace RockbarForEDCB
             rockbarSetting.PartialReserveListBackColor = partialReserveListBackColorTextBox.Text;
             rockbarSetting.NgReserveListBackColor = ngReserveListBackColorTextBox.Text;
             rockbarSetting.DisabledReserveListBackColor = disabledReserveListBackColorTextBox.Text;
-            rockbarSetting.ReserveListHeaderForeColor = reserveListHeaderForeColorTextBox.Text;
-            rockbarSetting.ReserveListHeaderBackColor = reserveListHeaderBackColorTextBox.Text;
+            rockbarSetting.ListHeaderForeColor = listHeaderForeColorTextBox.Text;
+            rockbarSetting.ListHeaderBackColor = listHeaderBackColorTextBox.Text;
             rockbarSetting.ForeColor = foreColorTextBox.Text;
 
             rockbarSetting.MenuFont = menuFontTextBox.Text;
@@ -1124,21 +1138,21 @@ namespace RockbarForEDCB
         /// </summary>
         /// <param name="sender">イベントソース</param>
         /// <param name="e">イベントパラメータ</param>
-        private void selectReserveListHeaderForeColorButton_Click(object sender, EventArgs e)
+        private void selectListHeaderForeColorButton_Click(object sender, EventArgs e)
         {
             // カラー選択ダイアログを開いて設定値を反映
             TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
 
-            if (reserveListHeaderForeColorTextBox.Text != null)
+            if (listHeaderForeColorTextBox.Text != null)
             {
-                colorDialog.Color = (Color)colorConverter.ConvertFromString(reserveListHeaderForeColorTextBox.Text);
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(listHeaderForeColorTextBox.Text);
             }
 
             DialogResult result = colorDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                reserveListHeaderForeColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                listHeaderForeColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
                 previewListView.Items[5].ForeColor = colorDialog.Color;
             }
         }
@@ -1148,21 +1162,21 @@ namespace RockbarForEDCB
         /// </summary>
         /// <param name="sender">イベントソース</param>
         /// <param name="e">イベントパラメータ</param>
-        private void selectReserveListHeaderBackColorButton_Click(object sender, EventArgs e)
+        private void selectListHeaderBackColorButton_Click(object sender, EventArgs e)
         {
             // カラー選択ダイアログを開いて設定値を反映
             TypeConverter colorConverter = TypeDescriptor.GetConverter(typeof(Color));
 
-            if (reserveListHeaderBackColorTextBox.Text != null)
+            if (listHeaderBackColorTextBox.Text != null)
             {
-                colorDialog.Color = (Color)colorConverter.ConvertFromString(reserveListHeaderBackColorTextBox.Text);
+                colorDialog.Color = (Color)colorConverter.ConvertFromString(listHeaderBackColorTextBox.Text);
             }
 
             DialogResult result = colorDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                reserveListHeaderBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
+                listHeaderBackColorTextBox.Text = colorConverter.ConvertToString(colorDialog.Color);
                 previewListView.Items[5].BackColor = colorDialog.Color;
             }
         }
