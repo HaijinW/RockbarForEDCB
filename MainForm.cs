@@ -77,6 +77,9 @@ namespace RockbarForEDCB
         // 予約一覧のヘッダ数
         private int listHeaderCount = 0;
 
+        // フィルタリング中かどうか
+        private bool isFiltering => filteringLabel != null && filteringLabel.Visible;
+
         /// <summary>
         /// コンストラクタ
         /// コンフィグの読み込み・CtrlCmdの初期化・初回表示処理を行う。
@@ -304,6 +307,12 @@ namespace RockbarForEDCB
         /// <param name="isTrasnmission">EpgTimerSrvと通信要否</param>
         private void RefreshEvent(bool isChannelRefresh, bool isTrasnmission)
         {
+            // フィルタリング中は何もしない
+            if (!isChannelRefresh && isFiltering)
+            {
+                return;
+            }
+
             // EpgTimerSrvと通信する
             if (isTrasnmission && canConnect)
             {
@@ -963,6 +972,19 @@ namespace RockbarForEDCB
 
                 if (string.IsNullOrEmpty(item.Name))
                 {
+                    var lastIndex = serviceListView.Items.Count - 1;
+                    if (i < lastIndex)
+                    {
+                        var prevItem = serviceListView.Items[i + 1];
+                        if (string.IsNullOrEmpty(prevItem.Name))
+                        {
+                            serviceListView.Items.RemoveAt(i);
+                        }
+                    }
+                    else if (i == lastIndex)
+                    {
+                        serviceListView.Items.RemoveAt(i);
+                    }
                     continue;
                 }
                 else if (
@@ -986,6 +1008,7 @@ namespace RockbarForEDCB
         private void ResetFilter()
         {
             filterTextBox.Clear();
+            filteringLabel.Visible = false;
             RefreshEvent(true, false);
         }
 
