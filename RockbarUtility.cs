@@ -158,6 +158,8 @@ namespace RockbarForEDCB
         public bool ToggleVisibleTaskTrayIconClick { get; set; }
         // 水平分割
         public bool IsHorizontalSplit { get; set; }
+        // 予約を無効にするとき、録画モードを「指定サービス」にする(EpgTimerSrvと同じ)
+        public bool FixNoRecToServiceOnly { get; set; }
         // 録画一覧の最大表示数
         public int RecListMaxCount { get; set; }
         // フォント(シリアライズしたもの)

@@ -100,6 +100,7 @@
             this.serviceListView.UseCompatibleStateImageBehavior = false;
             this.serviceListView.View = System.Windows.Forms.View.Details;
             this.serviceListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.serviceListView_MouseClick);
+            this.serviceListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.serviceListView_MouseUp);
             this.serviceListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.serviceListView_MouseDoubleClick);
             this.serviceListView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.serviceListView_ItemSelectionChanged);
             // 

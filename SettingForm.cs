@@ -178,6 +178,7 @@ namespace RockbarForEDCB
             storeTaskTrayByClosingCheckBox.Checked = setting.StoreTaskTrayByClosing;
             toggleVisibleTaskTrayIconClickCheckBox.Checked = setting.ToggleVisibleTaskTrayIconClick;
             isHorizontalSplitCheckBox.Checked = setting.IsHorizontalSplit;
+            fixNoRecToServiceOnlyCheckBox.Checked = setting.FixNoRecToServiceOnly;
             fontTextBox.Text = setting.Font;
 
             TypeConverter fontConverter = TypeDescriptor.GetConverter(typeof(Font));
@@ -732,6 +733,7 @@ namespace RockbarForEDCB
             rockbarSetting.StoreTaskTrayByClosing = storeTaskTrayByClosingCheckBox.Checked;
             rockbarSetting.ToggleVisibleTaskTrayIconClick = toggleVisibleTaskTrayIconClickCheckBox.Checked;
             rockbarSetting.IsHorizontalSplit = isHorizontalSplitCheckBox.Checked;
+            rockbarSetting.FixNoRecToServiceOnly = fixNoRecToServiceOnlyCheckBox.Checked;
             rockbarSetting.RecListMaxCount = (int) recListMaxCountNumericUpDown.Value;
 
             rockbarSetting.Font = fontTextBox.Text;

@@ -149,6 +149,7 @@ namespace RockbarForEDCB
             this.toggleVisibleTaskTrayIconClickCheckBox = new System.Windows.Forms.CheckBox();
             this.storeTaskTrayByClosingCheckBox = new System.Windows.Forms.CheckBox();
             this.showTaskTraiIconCheckBox = new System.Windows.Forms.CheckBox();
+            this.fixNoRecToServiceOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.recListMaxCountLabel = new System.Windows.Forms.Label();
             this.recListMaxCountNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.tvtestOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -1181,6 +1182,7 @@ namespace RockbarForEDCB
             this.otherTabPage.Controls.Add(this.toggleVisibleTaskTrayIconClickCheckBox);
             this.otherTabPage.Controls.Add(this.storeTaskTrayByClosingCheckBox);
             this.otherTabPage.Controls.Add(this.showTaskTraiIconCheckBox);
+            this.otherTabPage.Controls.Add(this.fixNoRecToServiceOnlyCheckBox);
             this.otherTabPage.Controls.Add(this.recListMaxCountLabel);
             this.otherTabPage.Controls.Add(this.recListMaxCountNumericUpDown);
             this.otherTabPage.Location = new System.Drawing.Point(4, 22);
@@ -1230,18 +1232,28 @@ namespace RockbarForEDCB
             this.showTaskTraiIconCheckBox.Text = "タスクトレイに常時アイコンを表示する";
             this.showTaskTraiIconCheckBox.UseVisualStyleBackColor = true;
             // 
+            // fixNoRecToServiceOnlyCheckBox
+            // 
+            this.fixNoRecToServiceOnlyCheckBox.AutoSize = true;
+            this.fixNoRecToServiceOnlyCheckBox.Location = new System.Drawing.Point(17, 110);
+            this.fixNoRecToServiceOnlyCheckBox.Name = "fixNoRecToServiceOnlyCheckBox";
+            this.fixNoRecToServiceOnlyCheckBox.Size = new System.Drawing.Size(195, 16);
+            this.fixNoRecToServiceOnlyCheckBox.TabIndex = 16;
+            this.fixNoRecToServiceOnlyCheckBox.Text = "予約を無効にするとき、録画モードを「指定サービス」にする";
+            this.fixNoRecToServiceOnlyCheckBox.UseVisualStyleBackColor = true;
+            // 
             // recListMaxCountLabel
             // 
             this.recListMaxCountLabel.AutoSize = true;
-            this.recListMaxCountLabel.Location = new System.Drawing.Point(14, 122);
+            this.recListMaxCountLabel.Location = new System.Drawing.Point(14, 144);
             this.recListMaxCountLabel.Name = "recListMaxCountLabel";
             this.recListMaxCountLabel.Size = new System.Drawing.Size(113, 12);
-            this.recListMaxCountLabel.TabIndex = 17;
+            this.recListMaxCountLabel.TabIndex = 18;
             this.recListMaxCountLabel.Text = "録画済み一覧の最大表示数(0～99999, 0=無制限)";
             // 
             // recListMaxCountNumericUpDown
             // 
-            this.recListMaxCountNumericUpDown.Location = new System.Drawing.Point(264, 120);
+            this.recListMaxCountNumericUpDown.Location = new System.Drawing.Point(264, 142);
             this.recListMaxCountNumericUpDown.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -1254,7 +1266,7 @@ namespace RockbarForEDCB
             0});
             this.recListMaxCountNumericUpDown.Name = "recListMaxCountNumericUpDown";
             this.recListMaxCountNumericUpDown.Size = new System.Drawing.Size(70, 19);
-            this.recListMaxCountNumericUpDown.TabIndex = 16;
+            this.recListMaxCountNumericUpDown.TabIndex = 17;
             this.recListMaxCountNumericUpDown.Value = new decimal(new int[] {
             RockBarSetting.DEFAULT_REC_LIST_MAX_COUNT,
             0,
@@ -2032,6 +2044,7 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label portNumberNoteLabel;
         private System.Windows.Forms.TabPage otherTabPage;
         private System.Windows.Forms.CheckBox showTaskTraiIconCheckBox;
+        private System.Windows.Forms.CheckBox fixNoRecToServiceOnlyCheckBox;
         private System.Windows.Forms.CheckBox isAutoOpenFavoriteServiceCheckBox;
         private System.Windows.Forms.Label recListMaxCountLabel;
         private System.Windows.Forms.NumericUpDown recListMaxCountNumericUpDown;
@@ -2040,8 +2053,8 @@ namespace RockbarForEDCB
         private System.Windows.Forms.Label tvtestTsFileOptionExampleLabel;
         private System.Windows.Forms.CheckBox toggleVisibleTaskTrayIconClickCheckBox;
         private System.Windows.Forms.CheckBox storeTaskTrayByClosingCheckBox;
-        private System.Windows.Forms.FontDialog fontDialog;
         private System.Windows.Forms.CheckBox isHorizontalSplitCheckBox;
+        private System.Windows.Forms.FontDialog fontDialog;
         private System.Windows.Forms.ColorDialog colorDialog;
         private System.Windows.Forms.TabPage tunerTabPage;
         private System.Windows.Forms.ListView tunerNameListView;

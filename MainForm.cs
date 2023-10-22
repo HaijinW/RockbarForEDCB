@@ -990,6 +990,31 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// 録画モード有効・無効の切り替え処理
+        /// 録画有効時は無効化、無効時は有効化する。
+        /// </summary>
+        private void ToggleRecMode(ReserveData reserve)
+        {
+            if (reserve.RecSetting.IsNoRec())
+            {
+                reserve.RecSetting.RecMode = rockbarSetting.FixNoRecToServiceOnly ? (byte)1 : reserve.RecSetting.GetRecMode();
+            }
+            else
+            {
+                // 録画モード情報を維持して無効化
+                var recMode = reserve.RecSetting.RecMode;
+                reserve.RecSetting.RecMode = (byte)(rockbarSetting.FixNoRecToServiceOnly ? 5 : 5 + (recMode + 4) % 5);
+            }
+
+            var err = ctrlCmdUtil.SendChgReserve(new List<ReserveData>() { reserve });
+            if (err != ErrCode.CMD_SUCCESS)
+            {
+                MessageBox.Show("予約変更でエラーが発生しました。", "予約変更エラー");
+            }
+            RefreshEvent(false, true);
+        }
+
+        /// <summary>
         /// 番組の右クリックコンテキストメニューItem作成処理
         /// 番組情報・予約情報からチャンネル一覧・チューナー一覧用のコンテキストメニューitemを作成する。
         /// </summary>
@@ -1340,6 +1365,21 @@ namespace RockbarForEDCB
         }
 
         /// <summary>
+        /// チャンネル一覧マウスアップ時処理
+        /// 中央ボタンのクリック検出用。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void serviceListView_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (serviceTabControl.SelectedTab == reserveTabPage)
+            {
+                reserveListView_MouseUp(sender, e);
+                return;
+            }
+        }
+
+        /// <summary>
         /// チャンネル一覧マウスダブルクリック処理
         /// TVTest使用オプションがONの場合、カーソル箇所の番組を対象にTVTestを起動する。
         /// </summary>
@@ -1435,13 +1475,22 @@ namespace RockbarForEDCB
                         listContextMenuStrip.Items.Add(new ToolStripSeparator());
                     }
 
+                    // 有効化・無効化を追加
+                    var hasData = reserveMap.TryGetValue(selected.Name, out var reserveData);
+                    if (hasData)
+                    {
+                        var item = listContextMenuStrip.Items.Add(reserveData.RecSetting.IsNoRec() ? "録画を有効にする" : "録画を無効にする");
+                        item.Click += (s2, e2) => ToggleRecMode(reserveData);
+                        listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    }
+
                     var dateTime = $"{ev.start_time.ToString("yyyy/MM/dd(ddd) HH:mm")}-{ev.start_time.AddSeconds(ev.durationSec).ToString("HH:mm")}";
                     var dateItem = listContextMenuStrip.Items.Add(dateTime);
                     dateItem.Enabled = false;
                     listContextMenuStrip.Items.Add(new ToolStripSeparator());
 
                     // 予約情報をメニューに追加
-                    if (reserveMap.TryGetValue(selected.Name, out var reserveData))
+                    if (hasData)
                     {
                         // 予約コメントを追加
                         if (! string.IsNullOrEmpty(reserveData.Comment))
@@ -1484,6 +1533,28 @@ namespace RockbarForEDCB
                 }
 
                 listContextMenuStrip.Show((Control)sender, new Point(e.X, e.Y));
+            }
+        }
+
+        /// <summary>
+        /// 予約一覧マウスアップ処理
+        /// 中央クリック時、対象の予約情報の録画有効・無効を切り替える。
+        /// </summary>
+        /// <param name="sender">イベントソース</param>
+        /// <param name="e">イベントパラメータ</param>
+        private void reserveListView_MouseUp(object sender, MouseEventArgs e)
+        {
+            // 中央クリック
+            // 予約情報の録画有効・無効を切り替える
+            if (e.Button == MouseButtons.Middle)
+            {
+                // クリックした箇所にある項目を取得する
+                var selected = serviceListView.GetItemAt(e.Location.X, e.Location.Y);
+
+                if (selected != null && reserveMap.TryGetValue(selected.Name, out var reserve))
+                {
+                    ToggleRecMode(reserve);
+                }
             }
         }
 
