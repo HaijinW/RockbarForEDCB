@@ -960,10 +960,16 @@ namespace RockbarForEDCB
         /// </summary>
         private void Filter()
         {
-            if (string.IsNullOrEmpty(filterTextBox.Text))
+            var filterText = filterTextBox.Text;
+            if (string.IsNullOrEmpty(filterText))
             {
                 ResetFilter();
                 return;
+            }
+            else if (isFiltering)
+            {
+                filteringLabel.Visible = false;
+                RefreshEvent(true, false);
             }
 
             for (var i = serviceListView.Items.Count - 1; i >= 0; i--)
@@ -988,8 +994,8 @@ namespace RockbarForEDCB
                     continue;
                 }
                 else if (
-                    item.SubItems[0].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0 &&
-                    item.SubItems[3].Text.IndexOf(filterTextBox.Text, StringComparison.OrdinalIgnoreCase) < 0
+                    item.SubItems[0].Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0 &&
+                    item.SubItems[3].Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0
                 )
                 {
                     serviceListView.Items.RemoveAt(i);
