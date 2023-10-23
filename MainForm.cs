@@ -1160,31 +1160,63 @@ namespace RockbarForEDCB
         /// 録画済み情報のテキスト生成処理
         /// </summary>
         /// <param name="recFile">録画済み情報</param>
-        private List<List<string>> createRecInfoDetailTexts(RecFileInfo recFile)
+        private List<List<RecInfoDetailText>> createRecInfoDetailTexts(RecFileInfo recFile)
         {
-            List<List<string>> detailTexts = new List<List<string>>();
-            var dateTimes = new List<string>() { $"{recFile.StartTime.ToString("yyyy/MM/dd(ddd) HH:mm")}-{recFile.StartTime.AddSeconds(recFile.DurationSecond).ToString("HH:mm")}" };
-            detailTexts.Add(dateTimes);
+            List<List<RecInfoDetailText>> detailTexts = new List<List<RecInfoDetailText>>();
+            {
+                var text = $"{recFile.StartTime.ToString("yyyy/MM/dd(ddd) HH:mm")}-{recFile.StartTime.AddSeconds(recFile.DurationSecond).ToString("HH:mm")}";
+                var dateTimes = new List<RecInfoDetailText>()
+                    {
+                        new RecInfoDetailText { Value = text, CopyText = text },
+                    };
+                detailTexts.Add(dateTimes);
+            }
 
-            var services = new List<string>() { recFile.ServiceName, recFile.Title };
+            var services = new List<RecInfoDetailText>()
+                {
+                    new RecInfoDetailText { Value = recFile.ServiceName, CopyText = recFile.ServiceName },
+                    new RecInfoDetailText { Value = recFile.Title, CopyText = recFile.Title },
+                };
             detailTexts.Add(services);
 
-            var results = new List<string>() { $"結果 : {recFile.Comment}" };
-            results.AddRange(RockbarUtility.BreakString($"録画ファイル : {recFile.RecFilePath}", 50));
-            detailTexts.Add(results);
+            {
+                var resultText = $"結果 : {recFile.Comment}";
+                var results = new List<RecInfoDetailText>()
+                    {
+                        new RecInfoDetailText { Value = resultText, CopyText = recFile.Comment },
+                    };
+                var pathTexts = RockbarUtility.BreakString($"録画ファイル : {recFile.RecFilePath}", 50);
+                results.AddRange(pathTexts.Select(t => new RecInfoDetailText { Value = t, CopyText = recFile.RecFilePath }));
+                detailTexts.Add(results);
+            }
 
-            var ids = new List<string>() {
-                $"OriginalNetworkID : {recFile.OriginalNetworkID} (0x{recFile.OriginalNetworkID.ToString("X4")})",
-                $"TransportStreamID : {recFile.TransportStreamID} (0x{recFile.TransportStreamID.ToString("X4")})",
-                $"ServiceID : {recFile.ServiceID} (0x{recFile.ServiceID.ToString("X4")})",
-                $"EventID : {recFile.EventID} (0x{recFile.EventID.ToString("X4")})"
-            };
-            detailTexts.Add(ids);
+            {
+                var copyText = $"{recFile.OriginalNetworkID} (0x{recFile.OriginalNetworkID.ToString("X4")})";
+                var value = $"OriginalNetworkID : {copyText}";
+                var ids = new List<RecInfoDetailText>()
+                    {
+                        new RecInfoDetailText { Value = value, CopyText = copyText },
+                    };
 
-            var scrambles = new List<string>() {
-                $"Drop : {recFile.Drops}",
-                $"Scramble : {recFile.Scrambles}"
-            };
+                copyText = $"{recFile.TransportStreamID} (0x{recFile.TransportStreamID.ToString("X4")})";
+                value = $"TransportStreamID : {copyText}";
+                ids.Add(new RecInfoDetailText { Value = value, CopyText = copyText });
+
+                copyText = $"{recFile.ServiceID} (0x{recFile.ServiceID.ToString("X4")})";
+                value = $"ServiceID : {copyText}";
+                ids.Add(new RecInfoDetailText { Value = value, CopyText = copyText });
+
+                copyText = $"{recFile.EventID} (0x{recFile.EventID.ToString("X4")})";
+                value = $"EventID : {copyText}";
+                ids.Add(new RecInfoDetailText { Value = value, CopyText = copyText });
+                detailTexts.Add(ids);
+            }
+
+            var scrambles = new List<RecInfoDetailText>()
+                {
+                    new RecInfoDetailText { Value = $"Drop : {recFile.Drops}", CopyText = recFile.Drops.ToString() },
+                    new RecInfoDetailText { Value = $"Scramble : {recFile.Scrambles}", CopyText = recFile.Scrambles.ToString() },
+                };
             detailTexts.Add(scrambles);
 
             return detailTexts;
@@ -1197,7 +1229,7 @@ namespace RockbarForEDCB
         private string createRecInfoTooltipTexts(RecFileInfo recFile)
         {
             var detailTexts = createRecInfoDetailTexts(recFile);
-            return string.Join("\n\n", detailTexts.Select(t => string.Join("\n", t)));
+            return string.Join("\n\n", detailTexts.Select(d => string.Join("\n", d.Select(t => t.Value))));
         }
 
         /// <summary>
@@ -1251,6 +1283,40 @@ namespace RockbarForEDCB
                 MessageBox.Show($"Web番組詳細URLが不正です。Web番組詳細URLの設定を見直してください。\nURL: {url}", "ブラウザ起動エラー");
                 return;
             }
+        }
+
+        /// <summary>
+        /// マウスクリック処理に応じてテキストのコピーをする
+        /// </summary>
+        /// <param name="text">対象テキスト</param>
+        private void copyText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            Clipboard.SetText(text);
+        }
+
+        /// <summary>
+        /// マウスクリック処理に応じてテキストでフィルタリングをする
+        /// </summary>
+        /// <param name="text">対象テキスト</param>
+        private void filterWith(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+            else if (isFiltering)
+            {
+                ResetFilter();
+            }
+
+            filterTextBox.Text = text;
+            filterTextBox.Focus();
+            Filter();
         }
 
         /// <summary>
@@ -1509,17 +1575,66 @@ namespace RockbarForEDCB
 
                     var dateTime = $"{ev.start_time.ToString("yyyy/MM/dd(ddd) HH:mm")}-{ev.start_time.AddSeconds(ev.durationSec).ToString("HH:mm")}";
                     var dateItem = listContextMenuStrip.Items.Add(dateTime);
-                    dateItem.Enabled = false;
+                    dateItem.Click += (s2, e2) => copyText(dateTime);
                     listContextMenuStrip.Items.Add(new ToolStripSeparator());
 
                     // 予約情報をメニューに追加
                     if (hasData)
                     {
+                        const string copyCommandText = "テキストをコピー";
+                        const string copyCommandTooltipText = "クリックでテキストをコピー";
+                        const string filterCommandText = "フィルタリング";
+                        // サービス名を追加
+                        if (! string.IsNullOrEmpty(reserveData.StationName))
+                        {
+                            var item = new ToolStripMenuItem(reserveData.StationName);
+                            listContextMenuStrip.Items.Add(item);
+                            var subItem = item.DropDownItems.Add(copyCommandText);
+                            subItem.Click += (s2, e2) => copyText(reserveData.StationName);
+                            subItem = item.DropDownItems.Add(filterCommandText);
+                            subItem.Click += (s2, e2) => filterWith(reserveData.StationName);
+                        }
+                        // 予約番組名を追加
+                        if (! string.IsNullOrEmpty(reserveData.Title))
+                        {
+                            var item = new ToolStripMenuItem(reserveData.Title);
+                            listContextMenuStrip.Items.Add(item);
+                            var subItem = item.DropDownItems.Add(copyCommandText);
+                            subItem.Click += (s2, e2) => copyText(reserveData.Title);
+                            subItem = item.DropDownItems.Add(filterCommandText);
+                            subItem.Click += (s2, e2) => filterWith(reserveData.Title);
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
                         // 予約コメントを追加
                         if (! string.IsNullOrEmpty(reserveData.Comment))
                         {
                             var item = listContextMenuStrip.Items.Add(reserveData.Comment);
-                            item.Enabled = false;
+                            item.Click += (s2, e2) => copyText(reserveData.Comment);
+                            item.ToolTipText = copyCommandTooltipText;
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
+                        // 録画予定ファイル名を追加
+                        if (reserveData.RecSetting.RecFolderList.Count > 0)
+                        {
+                            var recFolderList = reserveData.RecSetting.RecFolderList;
+                            foreach (var recInfo in recFolderList)
+                            {
+                                if (! string.IsNullOrEmpty(recInfo.RecFolder))
+                                {
+                                    var item = listContextMenuStrip.Items.Add(recInfo.RecFolder);
+                                    item.Click += (s2, e2) => copyText(recInfo.RecFolder);
+                                    item.ToolTipText = copyCommandTooltipText;
+                                }
+                            }
+                            foreach (var fileName in reserveData.RecFileNameList)
+                            {
+                                if (! string.IsNullOrEmpty(fileName))
+                                {
+                                    var item = listContextMenuStrip.Items.Add(fileName);
+                                    item.Click += (s2, e2) => copyText(fileName);
+                                    item.ToolTipText = copyCommandTooltipText;
+                                }
+                            }
                             listContextMenuStrip.Items.Add(new ToolStripSeparator());
                         }
                     }
@@ -1666,7 +1781,36 @@ namespace RockbarForEDCB
                     var detailTexts = createRecInfoDetailTexts(recFile);
                     if (detailTexts.Count > 0)
                     {
-                        foreach (var texts in detailTexts.GetRange(0, detailTexts.Count - 1))
+                        const string copyCommandText = "テキストをコピー";
+                        const string copyCommandTooltipText = "クリックでテキストをコピー";
+                        const string filterCommandText = "フィルタリング";
+                        // 録画日時を追加
+                        if (detailTexts[0].Count > 0)
+                        {
+                            foreach (var text in detailTexts[0])
+                            {
+                                var item = listContextMenuStrip.Items.Add(text.Value);
+                                item.Click += (s2, e2) => copyText(text.CopyText);
+                                item.ToolTipText = copyCommandTooltipText;
+                            }
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
+                        // 録画サービス名・番組名を追加
+                        if (detailTexts[1].Count > 0)
+                        {
+                            foreach (var text in detailTexts[1])
+                            {
+                                var item = new ToolStripMenuItem(text.Value);
+                                listContextMenuStrip.Items.Add(item);
+                                var subItem = item.DropDownItems.Add(copyCommandText);
+                                subItem.Click += (s2, e2) => copyText(text.CopyText);
+                                subItem = item.DropDownItems.Add(filterCommandText);
+                                subItem.Click += (s2, e2) => filterWith(text.CopyText);
+                            }
+                            listContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        }
+                        // その他の録画情報を追加
+                        foreach (var texts in detailTexts.GetRange(2, detailTexts.Count - 3))
                         {
                             if (texts.Count == 0)
                             {
@@ -1674,8 +1818,9 @@ namespace RockbarForEDCB
                             }
                             foreach (var text in texts)
                             {
-                                var item = listContextMenuStrip.Items.Add(text);
-                                item.Enabled = false;
+                                var item = listContextMenuStrip.Items.Add(text.Value);
+                                item.Click += (s2, e2) => copyText(text.CopyText);
+                                item.ToolTipText = copyCommandTooltipText;
                             }
                             listContextMenuStrip.Items.Add(new ToolStripSeparator());
                         }
@@ -1684,8 +1829,9 @@ namespace RockbarForEDCB
                         {
                             foreach (var text in lastTexts)
                             {
-                                var item = listContextMenuStrip.Items.Add(text);
-                                item.Enabled = false;
+                                var item = listContextMenuStrip.Items.Add(text.Value);
+                                item.Click += (s2, e2) => copyText(text.CopyText);
+                                item.ToolTipText = copyCommandTooltipText;
                             }
                         }
                     }

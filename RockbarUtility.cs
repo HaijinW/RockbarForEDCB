@@ -56,6 +56,15 @@ namespace RockbarForEDCB
     }
 
     /// <summary>
+    /// 予約詳細テキスト構造体
+    /// </summary>
+    public struct RecInfoDetailText
+    {
+        public string Value { get; set; }
+        public string CopyText { get; set; }
+    }
+
+    /// <summary>
     /// 設定ファイルクラス
     /// </summary>
     public class RockBarSetting
