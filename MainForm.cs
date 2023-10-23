@@ -972,33 +972,38 @@ namespace RockbarForEDCB
                 RefreshEvent(true, false);
             }
 
-            for (var i = serviceListView.Items.Count - 1; i >= 0; i--)
+            var separators = new char[] { ' ', '　' };
+            var filterWords = filterText.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var word in filterWords)
             {
-                var item = serviceListView.Items[i];
-
-                if (string.IsNullOrEmpty(item.Name))
+                for (var i = serviceListView.Items.Count - 1; i >= 0; i--)
                 {
-                    var lastIndex = serviceListView.Items.Count - 1;
-                    if (i < lastIndex)
+                    var item = serviceListView.Items[i];
+
+                    if (string.IsNullOrEmpty(item.Name))
                     {
-                        var prevItem = serviceListView.Items[i + 1];
-                        if (string.IsNullOrEmpty(prevItem.Name))
+                        var lastIndex = serviceListView.Items.Count - 1;
+                        if (i < lastIndex)
+                        {
+                            var prevItem = serviceListView.Items[i + 1];
+                            if (string.IsNullOrEmpty(prevItem.Name))
+                            {
+                                serviceListView.Items.RemoveAt(i);
+                            }
+                        }
+                        else if (i == lastIndex)
                         {
                             serviceListView.Items.RemoveAt(i);
                         }
+                        continue;
                     }
-                    else if (i == lastIndex)
+                    else if (
+                        item.SubItems[0].Text.IndexOf(word, StringComparison.OrdinalIgnoreCase) < 0 &&
+                        item.SubItems[3].Text.IndexOf(word, StringComparison.OrdinalIgnoreCase) < 0
+                    )
                     {
                         serviceListView.Items.RemoveAt(i);
                     }
-                    continue;
-                }
-                else if (
-                    item.SubItems[0].Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0 &&
-                    item.SubItems[3].Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0
-                )
-                {
-                    serviceListView.Items.RemoveAt(i);
                 }
             }
 
