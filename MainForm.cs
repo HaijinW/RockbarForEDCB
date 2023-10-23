@@ -2170,6 +2170,11 @@ namespace RockbarForEDCB
                 Filter();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                ResetFilter();
+                e.SuppressKeyPress = true;
+            }
         }
 
         /// <summary>
