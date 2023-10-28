@@ -2101,7 +2101,14 @@ namespace RockbarForEDCB
         /// <param name="e">イベントパラメータ</param>
         private void serviceTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var shouldFilter = isFiltering;
+
             RefreshEvent(true, false);
+
+            if (shouldFilter && ! string.IsNullOrEmpty(filterTextBox.Text))
+            {
+                Filter();
+            }
         }
 
         /// <summary>
